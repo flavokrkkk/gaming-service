@@ -1,0 +1,46 @@
+import { db } from "@/shared";
+import { currentUser } from "@clerk/nextjs/server";
+import { ICurrentUser } from "../types/types";
+import { redirect, RedirectType } from "next/navigation";
+import { ERouteNames } from "@/shared/libs/utils/pathVariables";
+
+class UserService {
+  private static instance: UserService;
+
+  public static getInstance(): UserService {
+    if (!UserService.instance) {
+      UserService.instance = new UserService();
+    }
+
+    return UserService.instance;
+  }
+
+  public async getCurrentUser(): Promise<ICurrentUser> {
+    const user = await currentUser();
+
+    if (!user) redirect(ERouteNames.SIGN_IN, RedirectType.replace);
+
+    const profile = await db.profile.findUnique({
+      where: {
+        userId: user.id,
+      },
+    });
+
+    if (profile) {
+      return profile;
+    }
+
+    const newProfile = await db.profile.create({
+      data: {
+        userId: user.id,
+        name: `${user.firstName} ${user.lastName}`,
+        imageUrl: user.imageUrl,
+        email: user.emailAddresses[0].emailAddress,
+      },
+    });
+
+    return newProfile;
+  }
+}
+
+export const { getCurrentUser } = UserService.getInstance();
