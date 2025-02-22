@@ -2,11 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-
+html,
+body,
+:root {
+  height: 100%;
+}
 
 @layer base {
   :root {
-
     --background: 0 0% 100%;
 
     --foreground: 20 14.3% 4.1%;
@@ -55,10 +58,9 @@
 
     --chart-5: 27 87% 67%;
 
-    --radius: 0.5rem
+    --radius: 0.5rem;
   }
   .dark {
-
     --background: 20 14.3% 4.1%;
 
     --foreground: 60 9.1% 97.8%;
@@ -105,11 +107,9 @@
 
     --chart-4: 280 65% 60%;
 
-    --chart-5: 340 75% 55%
+    --chart-5: 340 75% 55%;
   }
 }
-
-
 
 @layer base {
   * {
