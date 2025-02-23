@@ -1,4 +1,5 @@
-import { getCurrentUser, getServerByProfile } from "@/entities";
+import { getServerByProfile } from "@/entities/server/api";
+import { getCurrentUser } from "@/entities/user/api/userQuery";
 import ServerCustomizeModal from "@/features/server/ui/serverCustomizeModal";
 import { ERouteNames } from "@/shared/libs/utils/pathVariables";
 import { redirect } from "next/navigation";

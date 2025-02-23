@@ -1,7 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { UseFormReturn } from "react-hook-form";
 
 import {
   Button,
@@ -13,24 +12,32 @@ import {
   FormMessage,
   Input,
 } from "@/shared";
-import { CustomizeFormSchema, TypeCustomizeFormSchema } from "../schemes";
+import { TypeCustomizeFormSchema } from "../schemes";
 import FileUpload from "@/features/files/ui/fileUpload";
+import { useCreateServer } from "../hooks/useCreateServer";
+import { FC } from "react";
 
-const ServerCustomizeForm = () => {
-  const form = useForm<TypeCustomizeFormSchema>({
-    resolver: zodResolver(CustomizeFormSchema),
-    defaultValues: {
-      name: "",
-      imageUrl: "",
+interface IServerCustomizeForm {
+  form: UseFormReturn<
+    {
+      name: string;
+      imageUrl: string;
     },
-  });
+    undefined,
+    undefined
+  >;
+}
+
+const ServerCustomizeForm: FC<IServerCustomizeForm> = ({ form }) => {
+  const { mutate } = useCreateServer();
 
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: TypeCustomizeFormSchema) => {
-    console.log(values);
+    mutate(values);
     form.reset();
   };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

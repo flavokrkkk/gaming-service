@@ -3,7 +3,7 @@ import { Open_Sans } from "next/font/google";
 import "./styles/globals.css";
 import { cn } from "@/shared";
 import { ClerkProvider } from "@clerk/nextjs";
-import ThemeProvider from "@/shared/providers/themeProvider";
+import Providers from "@/shared/providers/providers";
 
 const font = Open_Sans({
   variable: "--font-geist-mono",
@@ -30,14 +30,7 @@ export default function RootLayout({
             "bg-white dark:bg-gray-mode-200"
           )}
         >
-          <ThemeProvider
-            attribute={"class"}
-            defaultTheme="dark"
-            enableSystem={false}
-            storageKey="strife-theme"
-          >
-            {children}
-          </ThemeProvider>
+          <Providers>{children}</Providers>
         </body>
       </html>
     </ClerkProvider>

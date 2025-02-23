@@ -38,6 +38,7 @@ export default {
         },
         ["gray-mode"]: {
           200: "#313338",
+          300: "#1E1F22",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

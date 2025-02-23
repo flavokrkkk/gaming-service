@@ -1,35 +1,22 @@
-import { db } from "@/shared/db";
-import { IServer } from "../types/types";
-import { ICurrentUser } from "@/entities/user/types/types";
+import { IServer, IServerRequest } from "../types/types";
+import axios from "axios";
 
-class ServerService {
-  private static instance: ServerService;
+class ServerServiceClient {
+  private static instance: ServerServiceClient;
 
-  public static getInstance(): ServerService {
-    if (!ServerService.instance) {
-      ServerService.instance = new ServerService();
+  public static getInstance(): ServerServiceClient {
+    if (!ServerServiceClient.instance) {
+      ServerServiceClient.instance = new ServerServiceClient();
     }
 
-    return ServerService.instance;
+    return ServerServiceClient.instance;
   }
 
-  public async getServerByProfile({
-    profileId,
-  }: {
-    profileId: ICurrentUser["id"];
-  }): Promise<IServer | null> {
-    const findServer = await db.server.findFirst({
-      where: {
-        members: {
-          some: {
-            profileId: profileId,
-          },
-        },
-      },
-    });
+  public async createServer(requestBody: IServerRequest): Promise<IServer> {
+    const { data } = await axios.post<IServer>("/api/servers/", requestBody);
 
-    return findServer;
+    return data;
   }
 }
 
-export const { getServerByProfile } = ServerService.getInstance();
+export const { createServer } = ServerServiceClient.getInstance();

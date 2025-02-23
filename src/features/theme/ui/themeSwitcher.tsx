@@ -3,8 +3,10 @@
 import { useTheme } from "next-themes";
 import { themesIcon, themesInversion } from "../libs/constants";
 import { Avatar } from "@/shared";
+import { useEffect, useState } from "react";
 const ThemeSwitcher = () => {
   const { setTheme, theme } = useTheme();
+  const [isMounted, setIsMounted] = useState(false);
 
   const handleChangeTheme = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!event.currentTarget.value) throw new Error("Invalid theme!");
@@ -13,6 +15,12 @@ const ThemeSwitcher = () => {
       themesInversion[event.currentTarget.value as keyof typeof themesInversion]
     );
   };
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null;
 
   return (
     <button
