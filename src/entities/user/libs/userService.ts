@@ -1,4 +1,4 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { ICurrentUser } from "../types/types";
 import { redirect, RedirectType } from "next/navigation";
 import { ERouteNames } from "@/shared/libs/utils/pathVariables";
@@ -41,6 +41,18 @@ class UserService {
 
     return newProfile;
   }
+
+  public async getCurrentProfile() {
+    const { userId } = await auth();
+    if (!userId) return null;
+    const profile = await db.profile.findUnique({
+      where: {
+        userId,
+      },
+    });
+
+    return profile;
+  }
 }
 
-export const { getCurrentUser } = UserService.getInstance();
+export const { getCurrentUser, getCurrentProfile } = UserService.getInstance();
