@@ -1,4 +1,4 @@
-import { db } from "@/shared";
+import { db } from "@/shared/db";
 import { IServer } from "../types/types";
 import { ICurrentUser } from "@/entities/user/types/types";
 

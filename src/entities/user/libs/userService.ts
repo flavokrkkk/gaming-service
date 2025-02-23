@@ -1,8 +1,8 @@
-import { db } from "@/shared";
 import { currentUser } from "@clerk/nextjs/server";
 import { ICurrentUser } from "../types/types";
 import { redirect, RedirectType } from "next/navigation";
 import { ERouteNames } from "@/shared/libs/utils/pathVariables";
+import { db } from "@/shared/db";
 
 class UserService {
   private static instance: UserService;

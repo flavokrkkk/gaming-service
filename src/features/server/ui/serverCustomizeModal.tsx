@@ -5,30 +5,10 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/shared";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  CustomizeFormSchema,
-  TypeCustomizeFormSchema,
-} from "../schemes/customizeFormSchema";
-
+import ServerCustomizeForm from "./serverCustomizeForm";
 const ServerCustomizeModal = () => {
-  const form = useForm<TypeCustomizeFormSchema>({
-    resolver: zodResolver(CustomizeFormSchema),
-    defaultValues: {
-      name: "",
-      imageUrl: "",
-    },
-  });
-
-  const isLoading = form.formState.isSubmitting;
-
-  const onSubmit = async (values: TypeCustomizeFormSchema) => {
-    console.log(values);
-  };
-
   return (
-    <Dialog>
+    <Dialog open>
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
@@ -39,6 +19,7 @@ const ServerCustomizeModal = () => {
             change it later
           </DialogDescription>
         </DialogHeader>
+        <ServerCustomizeForm />
       </DialogContent>
     </Dialog>
   );
