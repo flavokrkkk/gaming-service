@@ -14,6 +14,7 @@ import {
   Input,
 } from "@/shared";
 import { CustomizeFormSchema, TypeCustomizeFormSchema } from "../schemes";
+import FileUpload from "@/features/files/ui/fileUpload";
 
 const ServerCustomizeForm = () => {
   const form = useForm<TypeCustomizeFormSchema>({
@@ -28,6 +29,7 @@ const ServerCustomizeForm = () => {
 
   const onSubmit = async (values: TypeCustomizeFormSchema) => {
     console.log(values);
+    form.reset();
   };
   return (
     <Form {...form}>
@@ -36,6 +38,21 @@ const ServerCustomizeForm = () => {
           <div className="flex items-center justify-center text-center font-medium">
             TODO: Image Upload
           </div>
+          <FormField
+            control={form.control}
+            name="imageUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <FileUpload
+                    endpoint="serverImage"
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          ></FormField>
           <FormField
             control={form.control}
             name="name"
