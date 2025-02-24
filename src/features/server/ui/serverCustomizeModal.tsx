@@ -7,7 +7,6 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/shared";
-import ServerCustomizeForm from "./serverCustomizeForm";
 import { useAppSelector } from "@/shared/hooks/useAppSelector";
 import { serverSelectors } from "@/entities/server/models/store/serverSlice";
 import { useActions } from "@/shared/hooks/useActions";
@@ -15,6 +14,7 @@ import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CustomizeFormSchema, TypeCustomizeFormSchema } from "../schemes";
+import ServerCustomizeForm from "./serverCustomizeForm";
 
 const ServerCustomizeModal = () => {
   const isOpen = useAppSelector(serverSelectors.isOpen) ?? false;
@@ -38,6 +38,7 @@ const ServerCustomizeModal = () => {
       },
     };
   }, [form, setClose, isOpen, type]);
+
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
@@ -50,7 +51,7 @@ const ServerCustomizeModal = () => {
             change it later
           </DialogDescription>
         </DialogHeader>
-        <ServerCustomizeForm form={form} />
+        {isModalOpen && <ServerCustomizeForm form={form} />}
       </DialogContent>
     </Dialog>
   );

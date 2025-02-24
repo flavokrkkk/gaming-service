@@ -1,7 +1,7 @@
 "use client";
 
 import { FC } from "react";
-import "@uploadthing/react/styles.css";
+// import "@uploadthing/react/styles.css";
 import { UploadDropzone } from "@/shared/libs/utils/uploadthing";
 import Image from "next/image";
 import { X } from "lucide-react";
