@@ -51,7 +51,7 @@ const ServerCustomizeModal = () => {
             change it later
           </DialogDescription>
         </DialogHeader>
-        {isModalOpen && <ServerCustomizeForm form={form} />}
+        {isModalOpen && <ServerCustomizeForm form={form} onEvent={onClose} />}
       </DialogContent>
     </Dialog>
   );

@@ -26,9 +26,13 @@ interface IServerCustomizeForm {
     undefined,
     undefined
   >;
+  onEvent?: () => void;
 }
 
-const ServerCustomizeForm: FC<IServerCustomizeForm> = ({ form }) => {
+const ServerCustomizeForm: FC<IServerCustomizeForm> = ({
+  form,
+  onEvent = () => {},
+}) => {
   const { mutate } = useCreateServer();
 
   const isLoading = form.formState.isSubmitting;
@@ -36,6 +40,7 @@ const ServerCustomizeForm: FC<IServerCustomizeForm> = ({ form }) => {
   const onSubmit = async (values: TypeCustomizeFormSchema) => {
     mutate(values);
     form.reset();
+    onEvent();
   };
 
   return (

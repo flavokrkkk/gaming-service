@@ -31,6 +31,60 @@ class ServerQuery {
     return findServer;
   }
 
+  public async getServerById({
+    serverId,
+    profileId,
+  }: {
+    serverId: string;
+    profileId: string;
+  }): Promise<IServer> {
+    const server = await db.server.findUnique({
+      where: {
+        id: serverId,
+        members: {
+          some: {
+            profileId,
+          },
+        },
+      },
+    });
+
+    if (!server) throw new Error("Server not found!");
+
+    return server;
+  }
+
+  public async getServerChannel({
+    serverId,
+  }: {
+    serverId: string;
+  }): Promise<IServer> {
+    const channels = await db.server.findUnique({
+      where: {
+        id: serverId,
+      },
+      include: {
+        channels: {
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
+        members: {
+          include: {
+            profile: true,
+          },
+          orderBy: {
+            role: "asc",
+          },
+        },
+      },
+    });
+
+    if (!channels) throw new Error("Channels not found!");
+
+    return channels;
+  }
+
   public async getAllServers({
     profileId,
   }: {
@@ -46,4 +100,9 @@ class ServerQuery {
   }
 }
 
-export const { getServerByProfile, getAllServers } = ServerQuery.getInstance();
+export const {
+  getServerByProfile,
+  getAllServers,
+  getServerById,
+  getServerChannel,
+} = ServerQuery.getInstance();
