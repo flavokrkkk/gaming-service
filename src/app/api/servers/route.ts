@@ -1,9 +1,9 @@
-import { getCurrentProfile } from "@/entities";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { NextResponse } from "next/server";
 import { db } from "@/shared/db";
 import { MemberRole } from "@prisma/client";
+import { getCurrentProfile } from "@/entities/user/api/userQuery";
 
 export async function POST(req: Request) {
   try {
