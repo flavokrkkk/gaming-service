@@ -9,7 +9,7 @@ const NavigateServerAction = () => {
   const { setIsOpen } = useActions();
 
   const handleOpenModal = () => {
-    setIsOpen("createServer");
+    setIsOpen({ type: "createServer" });
   };
 
   return (

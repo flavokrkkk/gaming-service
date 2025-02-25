@@ -1,6 +1,7 @@
 import { db } from "@/shared/db";
 import { IServer } from "../types/types";
 import { ICurrentUser } from "@/entities/user/types/types";
+import { Server } from "@prisma/client";
 
 class ServerQuery {
   private static instance: ServerQuery;
@@ -37,7 +38,7 @@ class ServerQuery {
   }: {
     serverId: string;
     profileId: string;
-  }): Promise<IServer> {
+  }): Promise<IServer | null> {
     const server = await db.server.findUnique({
       where: {
         id: serverId,
@@ -49,7 +50,7 @@ class ServerQuery {
       },
     });
 
-    if (!server) throw new Error("Server not found!");
+    if (!server) return null;
 
     return server;
   }
@@ -92,11 +93,61 @@ class ServerQuery {
   }): Promise<Array<IServer>> {
     const servers = await db.server.findMany({
       where: {
-        profileId,
+        members: {
+          some: {
+            profileId: profileId,
+          },
+        },
       },
     });
 
     return servers;
+  }
+
+  public async getServerByInviteCode({
+    inviteCode,
+    profileId,
+  }: {
+    inviteCode: string;
+    profileId: string;
+  }) {
+    const server = await db.server.findFirst({
+      where: {
+        inviteCode,
+        members: {
+          some: {
+            profileId,
+          },
+        },
+      },
+    });
+
+    return server;
+  }
+
+  public async setInviteMember({
+    inviteCode,
+    profileId,
+  }: {
+    inviteCode: Server["inviteCode"];
+    profileId: string;
+  }) {
+    const server = await db.server.update({
+      where: {
+        inviteCode,
+      },
+      data: {
+        members: {
+          create: [
+            {
+              profileId,
+            },
+          ],
+        },
+      },
+    });
+
+    return server;
   }
 }
 
@@ -105,4 +156,6 @@ export const {
   getAllServers,
   getServerById,
   getServerChannel,
+  getServerByInviteCode,
+  setInviteMember,
 } = ServerQuery.getInstance();

@@ -17,6 +17,19 @@ class ServerServiceClient {
 
     return data;
   }
+
+  public async updateInviteLink({
+    serverId,
+  }: {
+    serverId: string;
+  }): Promise<IServer> {
+    const { data } = await axios.patch<IServer>(
+      `/api/servers/${serverId}/invite-code`
+    );
+
+    return data;
+  }
 }
 
-export const { createServer } = ServerServiceClient.getInstance();
+export const { createServer, updateInviteLink } =
+  ServerServiceClient.getInstance();

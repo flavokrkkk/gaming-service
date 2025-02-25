@@ -17,8 +17,8 @@ import { CustomizeFormSchema, TypeCustomizeFormSchema } from "../schemes";
 import ServerCustomizeForm from "./serverCustomizeForm";
 
 const ServerCustomizeModal = () => {
-  const isOpen = useAppSelector(serverSelectors.isOpen) ?? false;
-  const type = useAppSelector(serverSelectors.type) ?? null;
+  const isOpen = useAppSelector(serverSelectors.isOpen);
+  const type = useAppSelector(serverSelectors.type);
   const { setClose } = useActions();
 
   const form = useForm<TypeCustomizeFormSchema>({

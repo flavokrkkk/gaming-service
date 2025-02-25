@@ -8,9 +8,10 @@ import {
 } from "@/shared";
 import { MemberRole } from "@prisma/client";
 import { ChevronDown } from "lucide-react";
-import React, { FC } from "react";
+import React, { FC, useCallback } from "react";
 import ServerActionsPanel from "./serverActionsPanel";
 import clsx from "clsx";
+import { useActions } from "@/shared/hooks/useActions";
 
 interface IServerHeader {
   server: IServer;
@@ -18,8 +19,15 @@ interface IServerHeader {
 }
 
 const ServerHeader: FC<IServerHeader> = ({ role, server }) => {
+  const { setIsOpen } = useActions();
+
   const isAdmin = role === MemberRole.ADMIN;
   const isModerator = isAdmin || role === MemberRole.MODERATOR;
+
+  const handleOpenInviteModal = useCallback(
+    () => setIsOpen({ type: "invite", data: { server } }),
+    [server]
+  );
 
   return (
     <DropdownMenu>
@@ -35,7 +43,11 @@ const ServerHeader: FC<IServerHeader> = ({ role, server }) => {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 text-xs font-medium text-black dark:text-neutral-400 space-y-[2px]">
-        <ServerActionsPanel isAdmin={isAdmin} isModerator={isModerator} />
+        <ServerActionsPanel
+          isAdmin={isAdmin}
+          isModerator={isModerator}
+          onInvitePeople={handleOpenInviteModal}
+        />
       </DropdownMenuContent>
     </DropdownMenu>
   );

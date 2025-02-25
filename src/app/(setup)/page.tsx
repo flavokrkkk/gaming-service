@@ -8,6 +8,8 @@ import React from "react";
 const SetupPage = async () => {
   const profile = await getCurrentUser();
 
+  if (!profile) return redirect(ERouteNames.SIGN_IN);
+
   const server = await getServerByProfile({ profileId: profile.id });
 
   if (server) {

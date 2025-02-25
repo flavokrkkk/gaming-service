@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IServerSliceState, ModalType } from "../types/types";
+import { IModalData, IServerSliceState, ModalType } from "../types/types";
 import { rootReducer } from "@/shared/store";
 
 const initialState: IServerSliceState = {
   isOpen: false,
   type: null,
+  selectServers: null,
 };
 
 export const serverSlice = createSlice({
@@ -13,12 +14,19 @@ export const serverSlice = createSlice({
   selectors: {
     isOpen: (state) => state.isOpen,
     type: (state) => state.type,
+    selectServers: (state) => state.selectServers,
   },
   reducers: (create) => ({
     setIsOpen: create.reducer(
-      (state, { payload }: PayloadAction<ModalType>) => {
+      (
+        state,
+        {
+          payload: { type, data },
+        }: PayloadAction<{ type: ModalType; data?: IModalData }>
+      ) => {
         state.isOpen = true;
-        state.type = payload;
+        state.type = type;
+        state.selectServers = data ?? null;
       }
     ),
     setClose: create.reducer((state) => {
