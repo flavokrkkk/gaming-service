@@ -11,20 +11,24 @@ import {
 import { serverSelectors } from "@/entities/server/models/store/serverSlice";
 import { useActions } from "@/shared/hooks/useActions";
 import { useAppSelector } from "@/shared/hooks/useAppSelector";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { ScrollArea } from "@/shared/ui/scrollArea";
 import { Loader2, Users } from "lucide-react";
 import ServerMemberCard from "./serverMemberCard";
 import ServerMemberControl from "./serverMemberControl";
 import { useChangeMember } from "../hooks/useChangeMember";
 import { MemberRole } from "@prisma/client";
+import { useRemoveMember } from "../hooks/useRemoveMember";
 
 const ServerMembersModal = () => {
+  const [loadingId, setLoadingId] = useState("");
+
   const isOpen = useAppSelector(serverSelectors.isOpen);
   const type = useAppSelector(serverSelectors.type);
   const { setClose } = useActions();
   const selectServers = useAppSelector(serverSelectors.selectServers);
-  const { loadingId, mutate } = useChangeMember();
+  const { mutate } = useChangeMember(setLoadingId);
+  const { mutate: deleteMutate } = useRemoveMember(setLoadingId);
 
   const { handleClose, isModalOpen } = useMemo(() => {
     return {
@@ -32,6 +36,15 @@ const ServerMembersModal = () => {
       handleClose: () => setClose(),
     };
   }, [setClose, isOpen, type]);
+
+  const handleDeleteMember = useCallback(
+    ({ memberId }: { memberId: string }) => {
+      if (selectServers?.server) {
+        deleteMutate({ serverId: selectServers?.server.id, memberId });
+      }
+    },
+    [selectServers, deleteMutate]
+  );
 
   const handleChageMember = useCallback(
     (request: { memberId: string; role: MemberRole }) => {
@@ -63,6 +76,7 @@ const ServerMembersModal = () => {
                     <ServerMemberControl
                       member={member}
                       handleChageMember={handleChageMember}
+                      handleDeleteMember={handleDeleteMember}
                     />
                   )}
                 {loadingId === member.id && (

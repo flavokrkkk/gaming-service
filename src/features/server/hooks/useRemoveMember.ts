@@ -1,7 +1,7 @@
 "use client";
 
 import { IServer } from "@/entities";
-import { changeMemberRole } from "@/entities/member/libs/memberService";
+import { deleteMember } from "@/entities/member/libs/memberService";
 import { IChangeMemberRequest } from "@/entities/member/types/types";
 import { useActions } from "@/shared/hooks/useActions";
 import { useMutation } from "@tanstack/react-query";
@@ -9,17 +9,17 @@ import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
 import { toast } from "sonner";
 
-export const useChangeMember = (
+export const useRemoveMember = (
   setLoadingId: Dispatch<SetStateAction<string>>
 ) => {
   const router = useRouter();
   const { setIsOpen } = useActions();
 
   const { mutate, isPending } = useMutation({
-    mutationKey: ["member"],
-    mutationFn: (requestBody: IChangeMemberRequest) => {
-      setLoadingId(requestBody.memberId);
-      return changeMemberRole(requestBody);
+    mutationKey: ["member delete"],
+    mutationFn: (requestBody: Partial<IChangeMemberRequest>) => {
+      setLoadingId(requestBody.memberId ?? "");
+      return deleteMember(requestBody);
     },
     onSuccess: (server: IServer) => {
       router.refresh();
@@ -27,7 +27,7 @@ export const useChangeMember = (
       setLoadingId("");
     },
     onError: () => {
-      toast.error(`Failed to create server.`);
+      toast.error(`Failed to update server.`);
     },
   });
 

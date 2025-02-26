@@ -29,6 +29,21 @@ class MemberService {
     const { data } = await axios.patch<IServer>(url, { role });
     return data;
   }
+
+  public async deleteMember(
+    requestBody: Partial<IChangeMemberRequest>
+  ): Promise<IServer> {
+    const url = qs.stringifyUrl({
+      url: `/api/members/${requestBody.memberId}`,
+      query: {
+        serverId: requestBody.serverId,
+      },
+    });
+
+    const { data } = await axios.delete<IServer>(url);
+
+    return data;
+  }
 }
 
-export const { changeMemberRole } = MemberService.getInstance();
+export const { changeMemberRole, deleteMember } = MemberService.getInstance();
