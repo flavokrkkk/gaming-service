@@ -2,7 +2,6 @@ import { getCurrentProfile } from "@/entities/user/api/userQuery";
 import { db } from "@/shared/db";
 import axios from "axios";
 import { NextResponse } from "next/server";
-import { v4 as uuidv4 } from "uuid";
 
 export async function PATCH(
   req: Request,
@@ -10,21 +9,20 @@ export async function PATCH(
 ) {
   try {
     const { serverId } = await params;
+
+    const { name, imageUrl } = await req.json();
     const profile = await getCurrentProfile();
 
     if (!profile) return new NextResponse("Unauthorized", { status: 401 });
 
-    if (!serverId)
-      return new NextResponse("Server ID Missing", { status: 400 });
-
     const server = await db.server.update({
       where: {
         id: serverId,
-        //проверить случай с модерами
         profileId: profile.id,
       },
       data: {
-        inviteCode: uuidv4(),
+        name,
+        imageUrl,
       },
     });
 

@@ -1,6 +1,6 @@
 import { IServer } from "../../types";
 
-export type ModalType = "createServer" | "invite";
+export type ModalType = "createServer" | "invite" | "editServer" | "members";
 
 export interface IModalData {
   server: IServer;

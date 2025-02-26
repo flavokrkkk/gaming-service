@@ -15,15 +15,18 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CustomizeFormSchema, TypeCustomizeFormSchema } from "../schemes";
 import ServerCustomizeForm from "./serverCustomizeForm";
-import { useCreateServer } from "../hooks/useCreateServer";
+import { useUpdateServer } from "../hooks/useUpdateServer";
 
-const ServerCustomizeModal = () => {
+const ServerEditModal = () => {
   const isOpen = useAppSelector(serverSelectors.isOpen);
   const type = useAppSelector(serverSelectors.type);
+  const selectServer = useAppSelector(serverSelectors.selectServers);
+
+  const { mutate } = useUpdateServer({
+    serverId: selectServer?.server.id ?? "",
+  });
 
   const { setClose } = useActions();
-
-  const { mutate } = useCreateServer();
 
   const form = useForm<TypeCustomizeFormSchema>({
     resolver: zodResolver(CustomizeFormSchema),
@@ -34,14 +37,23 @@ const ServerCustomizeModal = () => {
   });
 
   const { isModalOpen, onClose } = useMemo(() => {
+    const shouldReset = isOpen && type === "editServer" && selectServer;
+
+    if (shouldReset) {
+      form.reset({
+        name: selectServer.server.name,
+        imageUrl: selectServer.server.imageUrl,
+      });
+    }
+
     return {
-      isModalOpen: isOpen && type === "createServer",
+      isModalOpen: isOpen && type === "editServer",
       onClose: () => {
         form.reset();
         setClose();
       },
     };
-  }, [form, setClose, isOpen, type]);
+  }, [form, isOpen, type, selectServer]);
 
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
@@ -57,8 +69,8 @@ const ServerCustomizeModal = () => {
         </DialogHeader>
         {isModalOpen && (
           <ServerCustomizeForm
-            type="create"
             form={form}
+            type="update"
             onMutate={mutate}
             onEvent={onClose}
           />
@@ -68,4 +80,4 @@ const ServerCustomizeModal = () => {
   );
 };
 
-export default ServerCustomizeModal;
+export default ServerEditModal;

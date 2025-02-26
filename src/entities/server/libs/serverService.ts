@@ -29,7 +29,19 @@ class ServerServiceClient {
 
     return data;
   }
+
+  public async updateServerSettings(
+    requestBody: IServerRequest & { serverId: string }
+  ): Promise<IServer> {
+    const { serverId, ...body } = requestBody;
+    const { data } = await axios.patch<IServer>(
+      `/api/servers/${serverId}`,
+      body
+    );
+
+    return data;
+  }
 }
 
-export const { createServer, updateInviteLink } =
+export const { createServer, updateInviteLink, updateServerSettings } =
   ServerServiceClient.getInstance();

@@ -29,6 +29,16 @@ const ServerHeader: FC<IServerHeader> = ({ role, server }) => {
     [server]
   );
 
+  const handleOpenEditModal = useCallback(
+    () => setIsOpen({ type: "editServer", data: { server } }),
+    [server]
+  );
+
+  const handleOpenMembersModal = useCallback(
+    () => setIsOpen({ type: "members", data: { server } }),
+    [server]
+  );
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="focus:outline-none" asChild>
@@ -46,6 +56,8 @@ const ServerHeader: FC<IServerHeader> = ({ role, server }) => {
         <ServerActionsPanel
           isAdmin={isAdmin}
           isModerator={isModerator}
+          onMembers={handleOpenMembersModal}
+          onEditServer={handleOpenEditModal}
           onInvitePeople={handleOpenInviteModal}
         />
       </DropdownMenuContent>

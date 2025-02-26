@@ -14,7 +14,6 @@ import {
 } from "@/shared";
 import { TypeCustomizeFormSchema } from "../schemes";
 import FileUpload from "@/features/files/ui/fileUpload";
-import { useCreateServer } from "../hooks/useCreateServer";
 import { FC } from "react";
 
 interface IServerCustomizeForm {
@@ -26,19 +25,21 @@ interface IServerCustomizeForm {
     undefined,
     undefined
   >;
+  type: "create" | "update";
+  onMutate: (values: TypeCustomizeFormSchema) => void;
   onEvent?: () => void;
 }
 
 const ServerCustomizeForm: FC<IServerCustomizeForm> = ({
   form,
+  type = "create",
   onEvent = () => {},
+  onMutate,
 }) => {
-  const { mutate } = useCreateServer();
-
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: TypeCustomizeFormSchema) => {
-    mutate(values);
+    onMutate(values);
     form.reset();
     onEvent();
   };
@@ -70,7 +71,7 @@ const ServerCustomizeForm: FC<IServerCustomizeForm> = ({
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
+                <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-zinc-300/50">
                   Server name
                 </FormLabel>
                 <FormControl>
@@ -86,9 +87,9 @@ const ServerCustomizeForm: FC<IServerCustomizeForm> = ({
             )}
           />
         </div>
-        <div className="bg-gray-100 px-6 py-4">
+        <div className="px-6 py-4">
           <Button variant={"indigo"} className="w-full">
-            Create
+            {type === "create" ? "Create" : "Save"}
           </Button>
         </div>
       </form>
