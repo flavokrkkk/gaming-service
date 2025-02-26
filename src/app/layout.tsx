@@ -6,6 +6,7 @@ import Providers from "@/shared/providers/providers";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
+import ServerPanelLayout from "@/features/server/ui/serverPanelLayout";
 
 const font = Open_Sans({
   variable: "--font-geist-mono",
@@ -32,7 +33,9 @@ export default function RootLayout({
         )}
       >
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-        <Providers>{children}</Providers>
+        <Providers>
+          <ServerPanelLayout>{children}</ServerPanelLayout>
+        </Providers>
       </body>
     </html>
   );

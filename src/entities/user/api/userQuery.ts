@@ -18,7 +18,7 @@ class UserQuery {
   public async getCurrentUser(): Promise<ICurrentUser> {
     const user = await currentUser();
 
-    if (!user) redirect(ERouteNames.SIGN_IN, RedirectType.replace);
+    if (!user) return redirect(ERouteNames.SIGN_IN, RedirectType.replace);
 
     const profile = await db.profile.findUnique({
       where: {

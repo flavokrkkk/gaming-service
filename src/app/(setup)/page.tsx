@@ -1,22 +1,7 @@
-import { getServerByProfile } from "@/entities/server/api";
-import { getCurrentUser } from "@/entities/user/api/userQuery";
-import ServerCustomizeModal from "@/features/server/ui/serverCustomizeModal";
-import { ERouteNames } from "@/shared/libs/utils/pathVariables";
-import { redirect } from "next/navigation";
 import React from "react";
 
 const SetupPage = async () => {
-  const profile = await getCurrentUser();
-
-  if (!profile) return redirect(ERouteNames.SIGN_IN);
-
-  const server = await getServerByProfile({ profileId: profile.id });
-
-  if (server) {
-    return redirect(`${ERouteNames.SERVERS}/${server.id}`);
-  }
-
-  return <ServerCustomizeModal />;
+  return <div>Главная страница</div>;
 };
 
 export default SetupPage;

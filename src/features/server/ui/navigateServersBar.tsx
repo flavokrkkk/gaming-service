@@ -1,17 +1,17 @@
 import { getAllServers } from "@/entities/server/api";
 import { getCurrentProfile } from "@/entities/user/api/userQuery";
-import { redirect } from "next/navigation";
 import NavigateServerAction from "./navigateServerAction";
 import { Separator } from "@/shared/ui/separator";
 import { ScrollArea } from "@/shared/ui/scrollArea";
 import NavigateServerItem from "./navigateServerItem";
 import ThemeSwitcher from "@/features/theme/ui/themeSwitcher";
 import { UserButton } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 const NavigateServerBar = async () => {
   const profile = await getCurrentProfile();
 
-  if (!profile) return redirect("/");
+  if (!profile) return redirect("/sign-in");
 
   const servers = await getAllServers({ profileId: profile.id });
 

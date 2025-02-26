@@ -1,7 +1,6 @@
 import { getServerById } from "@/entities/server/api";
 import { getCurrentProfile } from "@/entities/user/api/userQuery";
 import ServerSideBar from "@/features/server/ui/serverSideBar";
-import { ERouteNames } from "@/shared/libs/utils/pathVariables";
 import { redirect } from "next/navigation";
 import React, { FC, PropsWithChildren } from "react";
 
@@ -12,7 +11,7 @@ const ServerIdLayout: FC<
 
   const profile = await getCurrentProfile();
 
-  if (!profile) return redirect(ERouteNames.SIGN_IN);
+  if (!profile) return redirect("/sign-in");
 
   const server = await getServerById({
     serverId,

@@ -11,15 +11,18 @@ interface IServerSideBar {
 const ServerSideBar: FC<IServerSideBar> = async ({ serverId }) => {
   const profile = await getCurrentProfile();
 
-  if (!profile) return redirect("/");
+  if (!profile) {
+    return redirect("/sign-in");
+  }
 
   const server = await getServerChannel({ serverId });
+  if (!server) {
+    return redirect("/");
+  }
 
   //   const filterChannels = filterChannelByType(server);
 
   //   const members = server.members?.filter((member) => member.id !== profile.id);
-
-  if (!server) return redirect("/");
 
   const role = server.members?.find(
     (member) => member.profileId === profile.id
