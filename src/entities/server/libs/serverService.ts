@@ -41,7 +41,20 @@ class ServerServiceClient {
 
     return data;
   }
+
+  public async serverLeave({
+    serverId,
+  }: {
+    serverId: string;
+  }): Promise<IServer> {
+    const { data } = await axios.patch(`/api/servers/${serverId}/leave`);
+    return data;
+  }
 }
 
-export const { createServer, updateInviteLink, updateServerSettings } =
-  ServerServiceClient.getInstance();
+export const {
+  createServer,
+  updateInviteLink,
+  updateServerSettings,
+  serverLeave,
+} = ServerServiceClient.getInstance();

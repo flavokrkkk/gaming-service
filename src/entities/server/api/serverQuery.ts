@@ -104,6 +104,10 @@ class ServerQuery {
     return servers;
   }
 
+  // public getCachedServers = unstable_cache(this.getAllServers, ["servers"], {
+  //   tags: ["servers"],
+  // });
+
   public async getServerByInviteCode({
     inviteCode,
     profileId,

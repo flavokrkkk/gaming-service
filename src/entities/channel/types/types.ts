@@ -13,3 +13,9 @@ export interface IChannel {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface IChannelRequest {
+  name: string;
+  type: ChannelType;
+  serverId: string;
+}

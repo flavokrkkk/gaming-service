@@ -15,6 +15,8 @@ interface IServerActionsPanel {
   onInvitePeople: () => void;
   onEditServer: () => void;
   onMembers: () => void;
+  onLeaveServer: () => void;
+  onCreateChannel: () => void;
 }
 
 const ServerActionsPanel: FC<IServerActionsPanel> = ({
@@ -22,7 +24,9 @@ const ServerActionsPanel: FC<IServerActionsPanel> = ({
   isModerator,
   onMembers,
   onEditServer,
+  onLeaveServer,
   onInvitePeople,
+  onCreateChannel,
 }) => {
   return (
     <>
@@ -56,7 +60,10 @@ const ServerActionsPanel: FC<IServerActionsPanel> = ({
         </DropdownMenuItem>
       )}
       {isModerator && (
-        <DropdownMenuItem className="px-3 py-2 text-sm cursor-pointer">
+        <DropdownMenuItem
+          className="px-3 py-2 text-sm cursor-pointer"
+          onClick={onCreateChannel}
+        >
           Create Channel
           <PlusCircle className="h-4 w-4 ml-auto" />
         </DropdownMenuItem>
@@ -69,7 +76,10 @@ const ServerActionsPanel: FC<IServerActionsPanel> = ({
         </DropdownMenuItem>
       )}
       {!isAdmin && (
-        <DropdownMenuItem className="text-rose-500 px-3 py-2 text-sm cursor-pointer">
+        <DropdownMenuItem
+          className="text-rose-500 px-3 py-2 text-sm cursor-pointer"
+          onClick={onLeaveServer}
+        >
           Leave Server
           <LogOut className="h-4 w-4 ml-auto" />
         </DropdownMenuItem>

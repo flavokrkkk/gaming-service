@@ -19,11 +19,11 @@ export const useCopied = () => {
         setIsCopied(true);
         setTimeout(() => setIsCopied(false), 2000);
         toast.error("Скопировано", {
-          position: "top-center",
+          position: "bottom-right",
         });
       } catch (err) {
         toast.error(`Не удалось скопировать ${err}`, {
-          position: "top-center",
+          position: "bottom-right",
         });
         console.error("Ошибка при копировании текста:", err);
         setIsCopied(false);

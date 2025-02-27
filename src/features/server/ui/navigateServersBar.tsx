@@ -29,7 +29,7 @@ const NavigateServerBar = async () => {
       <div className="pb-3 mt-auto flex items-center flex-col gap-y-4">
         <ThemeSwitcher />
         <UserButton
-          afterSignOutUrl="/"
+          afterSignOutUrl="/sign-in"
           appearance={{
             elements: {
               avatarBox:

@@ -45,8 +45,8 @@ const ServerInviteModal = () => {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
-      <DialogContent className="bg-zinc-900 text-white border border-zinc-800 rounded-lg shadow-2xl mx-auto overflow-hidden">
-        <DialogHeader className="pt-8 px-6">
+      <DialogContent className="bg-zinc-900 text-white border border-zinc-800 rounded-xl shadow-2xl mx-auto p-0 overflow-hidden">
+        <DialogHeader className="px-6 pt-8">
           <DialogTitle className="text-2xl text-center font-bold">
             Invite Friends
           </DialogTitle>

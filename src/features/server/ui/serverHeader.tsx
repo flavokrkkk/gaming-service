@@ -39,6 +39,15 @@ const ServerHeader: FC<IServerHeader> = ({ role, server }) => {
     [server]
   );
 
+  const handleOpenCreateChannelModal = useCallback(
+    () => setIsOpen({ type: "createChannel" }),
+    [server]
+  );
+  const handleOpenLeaveServerModal = useCallback(
+    () => setIsOpen({ type: "leaveServer", data: { server } }),
+    [server]
+  );
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="focus:outline-none" asChild>
@@ -59,6 +68,8 @@ const ServerHeader: FC<IServerHeader> = ({ role, server }) => {
           onMembers={handleOpenMembersModal}
           onEditServer={handleOpenEditModal}
           onInvitePeople={handleOpenInviteModal}
+          onLeaveServer={handleOpenLeaveServerModal}
+          onCreateChannel={handleOpenCreateChannelModal}
         />
       </DropdownMenuContent>
     </DropdownMenu>
