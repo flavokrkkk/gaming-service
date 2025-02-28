@@ -35,3 +35,34 @@ export async function PATCH(
     throw err;
   }
 }
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<{ serverId: string }> }
+) {
+  try {
+    const { serverId } = await params;
+
+    const profile = await getCurrentProfile();
+
+    if (!profile) return new NextResponse("Unauthorized", { status: 401 });
+
+    if (!serverId)
+      return new NextResponse("Server ID Missing", { status: 400 });
+
+    const server = await db.server.delete({
+      where: {
+        id: serverId,
+        profileId: profile.id,
+      },
+    });
+
+    return NextResponse.json(server);
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      return new NextResponse("Internal Error", { status: err.status });
+    }
+
+    throw err;
+  }
+}

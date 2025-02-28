@@ -3,6 +3,9 @@ import { getCurrentProfile } from "@/entities/user/api/userQuery";
 import { redirect } from "next/navigation";
 import { FC } from "react";
 import ServerHeader from "./serverHeader";
+import { ScrollArea } from "@/shared/ui/scrollArea";
+import ServerSearch from "./serverSearch";
+import { filterChannelByType } from "@/shared/helpers/filterChannels";
 
 interface IServerSideBar {
   serverId: string;
@@ -20,9 +23,7 @@ const ServerSideBar: FC<IServerSideBar> = async ({ serverId }) => {
     return redirect("/");
   }
 
-  //   const filterChannels = filterChannelByType(server);
-
-  //   const members = server.members?.filter((member) => member.id !== profile.id);
+  const filterChannels = filterChannelByType(server, profile.id);
 
   const role = server.members?.find(
     (member) => member.profileId === profile.id
@@ -33,6 +34,11 @@ const ServerSideBar: FC<IServerSideBar> = async ({ serverId }) => {
   return (
     <div className="flex flex-col h-full text-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5]">
       <ServerHeader server={server} role={role} />
+      <ScrollArea className="flex-1 px-3">
+        <div className="mt-2">
+          <ServerSearch data={filterChannels} />
+        </div>
+      </ScrollArea>
     </div>
   );
 };

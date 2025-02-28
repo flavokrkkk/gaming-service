@@ -20,7 +20,6 @@ export async function PATCH(
     const server = await db.server.update({
       where: {
         id: serverId,
-        //проверить случай с модерами
         profileId: profile.id,
       },
       data: {

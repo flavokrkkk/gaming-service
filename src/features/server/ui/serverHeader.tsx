@@ -8,10 +8,10 @@ import {
 } from "@/shared";
 import { MemberRole } from "@prisma/client";
 import { ChevronDown } from "lucide-react";
-import React, { FC, useCallback } from "react";
+import React, { FC } from "react";
 import ServerActionsPanel from "./serverActionsPanel";
 import clsx from "clsx";
-import { useActions } from "@/shared/hooks/useActions";
+import { useServerActions } from "../hooks/useServerActions";
 
 interface IServerHeader {
   server: IServer;
@@ -19,34 +19,17 @@ interface IServerHeader {
 }
 
 const ServerHeader: FC<IServerHeader> = ({ role, server }) => {
-  const { setIsOpen } = useActions();
-
   const isAdmin = role === MemberRole.ADMIN;
   const isModerator = isAdmin || role === MemberRole.MODERATOR;
 
-  const handleOpenInviteModal = useCallback(
-    () => setIsOpen({ type: "invite", data: { server } }),
-    [server]
-  );
-
-  const handleOpenEditModal = useCallback(
-    () => setIsOpen({ type: "editServer", data: { server } }),
-    [server]
-  );
-
-  const handleOpenMembersModal = useCallback(
-    () => setIsOpen({ type: "members", data: { server } }),
-    [server]
-  );
-
-  const handleOpenCreateChannelModal = useCallback(
-    () => setIsOpen({ type: "createChannel" }),
-    [server]
-  );
-  const handleOpenLeaveServerModal = useCallback(
-    () => setIsOpen({ type: "leaveServer", data: { server } }),
-    [server]
-  );
+  const {
+    handleOpenEditModal,
+    handleOpenInviteModal,
+    handleOpenMembersModal,
+    handleOpenLeaveServerModal,
+    handleOpenDeleteServerModal,
+    handleOpenCreateChannelModal,
+  } = useServerActions(server);
 
   return (
     <DropdownMenu>
@@ -69,6 +52,7 @@ const ServerHeader: FC<IServerHeader> = ({ role, server }) => {
           onEditServer={handleOpenEditModal}
           onInvitePeople={handleOpenInviteModal}
           onLeaveServer={handleOpenLeaveServerModal}
+          onDeleteServer={handleOpenDeleteServerModal}
           onCreateChannel={handleOpenCreateChannelModal}
         />
       </DropdownMenuContent>

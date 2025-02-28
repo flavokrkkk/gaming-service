@@ -50,6 +50,15 @@ class ServerServiceClient {
     const { data } = await axios.patch(`/api/servers/${serverId}/leave`);
     return data;
   }
+
+  public async deleteServer({
+    serverId,
+  }: {
+    serverId: string;
+  }): Promise<IServer> {
+    const { data } = await axios.delete(`/api/servers/${serverId}`);
+    return data;
+  }
 }
 
 export const {
@@ -57,4 +66,5 @@ export const {
   updateInviteLink,
   updateServerSettings,
   serverLeave,
+  deleteServer,
 } = ServerServiceClient.getInstance();

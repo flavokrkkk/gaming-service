@@ -1,8 +1,11 @@
 import { IServer } from "@/entities";
 import { IChannel } from "@/entities/channel/types/types";
+import { roleIconMap } from "@/features/server/libs/utils";
+import { iconMap } from "@/features/server/libs/utils/iconsMap";
+import { IChannelSearch } from "@/features/server/types/types";
 import { ChannelType } from "@prisma/client";
 
-export const filterChannelByType = (server: IServer) => {
+export const filterChannelByType = (server: IServer, profileId: string) => {
   const filterChannels = server.channels?.reduce(
     (acc, item) => {
       if (item.type === ChannelType.AUDIO) {
@@ -26,5 +29,48 @@ export const filterChannelByType = (server: IServer) => {
     }
   );
 
-  return filterChannels;
+  const members = server.members?.filter(
+    (member) => member.profileId !== profileId
+  );
+
+  const channelTypes: Array<IChannelSearch> = [
+    {
+      label: "Text Channels",
+      type: "channel",
+      data: filterChannels?.textChannels.map((channel) => ({
+        id: channel.id,
+        name: channel.name,
+        icon: iconMap[channel.type],
+      })),
+    },
+    {
+      label: "Voice Channels",
+      type: "channel",
+      data: filterChannels?.audioChannels.map((channel) => ({
+        id: channel.id,
+        name: channel.name,
+        icon: iconMap[channel.type],
+      })),
+    },
+    {
+      label: "Video Channels",
+      type: "channel",
+      data: filterChannels?.videoChannels.map((channel) => ({
+        id: channel.id,
+        name: channel.name,
+        icon: iconMap[channel.type],
+      })),
+    },
+    {
+      label: "Members",
+      type: "member",
+      data: members?.map((member) => ({
+        id: member.id,
+        name: member.profile.name,
+        icon: roleIconMap[member.role],
+      })),
+    },
+  ];
+
+  return channelTypes;
 };
