@@ -24,25 +24,26 @@ const ChannelCreateModal = () => {
 
   const { setClose } = useActions();
 
-  const { mutate, isPending } = useCreateChannel();
+  const { mutate } = useCreateChannel();
 
   const form = useForm<TypeCreateChannelFormSchema>({
     resolver: zodResolver(CreateChannelFormSchema),
     defaultValues: {
       name: "",
       type: ChannelType.TEXT,
+      isPrivate: false,
     },
   });
 
-  const { isModalOpen, onClose } = useMemo(() => {
-    return {
-      isModalOpen: isOpen && type === "createChannel",
-      onClose: () => {
-        form.reset();
-        setClose();
-      },
-    };
-  }, [setClose, isOpen, type, form]);
+  const isModalOpen = useMemo(
+    () => isOpen && type === "createChannel",
+    [type, isOpen]
+  );
+
+  const onClose = useCallback(() => {
+    form.reset();
+    setClose();
+  }, [form]);
 
   const handleMutateChannel = useCallback(
     (values: TypeCreateChannelFormSchema) => {
@@ -63,7 +64,6 @@ const ChannelCreateModal = () => {
         </DialogHeader>
         {isModalOpen && (
           <ChannelCreateForm
-            isPending={isPending}
             form={form}
             onEvent={onClose}
             onMutate={handleMutateChannel}

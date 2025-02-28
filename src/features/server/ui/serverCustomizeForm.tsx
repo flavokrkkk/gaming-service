@@ -40,7 +40,6 @@ const ServerCustomizeForm: FC<IServerCustomizeForm> = ({
 
   const onSubmit = async (values: TypeCustomizeFormSchema) => {
     onMutate(values);
-    form.reset();
     onEvent();
   };
 

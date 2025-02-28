@@ -2,10 +2,12 @@
 
 import { cn } from "@/shared";
 import { ERouteNames } from "@/shared/libs/utils/pathVariables";
+import { Skeleton } from "@/shared/ui/skeleton/skeleton";
 import TooltipAction from "@/shared/ui/tooltip/tooltipAction";
+import clsx from "clsx";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 
 interface INavigateServerItem {
   id: string;
@@ -18,10 +20,13 @@ const NavigateServerItem: FC<INavigateServerItem> = ({
   imageUrl,
   name,
 }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
   const router = useRouter();
   const params = useParams();
 
   const handleNavigate = () => router.push(`${ERouteNames.SERVERS}/${id}`);
+
+  const handleIsLoaded = () => setIsLoaded(true);
 
   return (
     <TooltipAction side="right" align="center" label={name}>
@@ -43,7 +48,23 @@ const NavigateServerItem: FC<INavigateServerItem> = ({
               "bg-primary/10 text-primary rounded-[16px]"
           )}
         >
-          <Image fill src={imageUrl} alt="Channel" />
+          {!isLoaded && (
+            <Skeleton
+              className={clsx(
+                "h-12 w-12 absolute inset-0",
+                params?.serverId === id ? "rounded-[16px]" : " rounded-full"
+              )}
+            />
+          )}
+          <Image
+            fill
+            src={imageUrl}
+            alt={name}
+            sizes="48px"
+            className="object-cover transition-opacity duration-300"
+            style={{ opacity: isLoaded ? 1 : 0 }}
+            onLoad={handleIsLoaded}
+          />
         </div>
       </button>
     </TooltipAction>

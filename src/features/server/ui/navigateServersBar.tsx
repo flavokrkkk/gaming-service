@@ -7,6 +7,8 @@ import NavigateServerItem from "./navigateServerItem";
 import ThemeSwitcher from "@/features/theme/ui/themeSwitcher";
 import { UserButton } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import { Skeleton } from "@/shared/ui/skeleton/skeleton";
 
 const NavigateServerBar = async () => {
   const profile = await getCurrentProfile();
@@ -20,11 +22,15 @@ const NavigateServerBar = async () => {
       <NavigateServerAction />
       <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
       <ScrollArea className="flex-1 w-full">
-        {servers.map(({ id, name, imageUrl }) => (
-          <div className="mb-4" key={id}>
-            <NavigateServerItem id={id} name={name} imageUrl={imageUrl} />
-          </div>
-        ))}
+        <Suspense
+          fallback={<Skeleton className="h-[48px] w-[48px] rounded-full" />}
+        >
+          {servers.map(({ id, name, imageUrl }) => (
+            <div key={id} className="mb-4">
+              <NavigateServerItem id={id} name={name} imageUrl={imageUrl} />
+            </div>
+          ))}
+        </Suspense>
       </ScrollArea>
       <div className="pb-3 mt-auto flex items-center flex-col gap-y-4">
         <ThemeSwitcher />
@@ -36,6 +42,7 @@ const NavigateServerBar = async () => {
                 "h-[48px] w-[48px] rounded-full transition-all duration-200 group-hover:scale-105 group-hover:ring-2 group-hover:ring-emerald-500",
             },
           }}
+          fallback={<Skeleton className="h-12 w-12 rounded-full " />}
         />
       </div>
     </div>

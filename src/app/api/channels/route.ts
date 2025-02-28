@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const serverId = searchParams.get("serverId");
-    const { name, type } = await req.json();
+    const { name, type, isPrivate } = await req.json();
 
     const profile = await getCurrentProfile();
 
@@ -46,6 +46,7 @@ export async function POST(req: Request) {
             profileId: profile.id,
             name,
             type,
+            isPrivate,
           },
         },
       },

@@ -11,6 +11,7 @@ export const CreateChannelFormSchema = z.object({
       message: "Channel name cannot be general",
     }),
   type: z.nativeEnum(ChannelType),
+  isPrivate: z.boolean(),
 });
 
 export type TypeCreateChannelFormSchema = z.infer<
