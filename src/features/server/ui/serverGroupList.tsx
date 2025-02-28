@@ -2,6 +2,7 @@ import { CommandGroup } from "@/shared/ui/command/command";
 import React, { FC } from "react";
 import { IChannelSearch } from "../types/types";
 import ServerSearchGroupCard from "./serverSearchGroupCard";
+import { cn } from "@/shared";
 
 interface IServerGroupList {
   label: IChannelSearch["label"];
@@ -23,7 +24,13 @@ const ServerGroupList: FC<IServerGroupList> = ({
     <CommandGroup
       key={label}
       heading={
-        <span className="py-1 flex flex-col space-y-2 text-xs font-semibold text-indigo-400 uppercase tracking-wider">
+        <span
+          className={cn(
+            "py-1 text-xs font-semibold uppercase tracking-wider rounded-md",
+            "text-gray-600 ",
+            "dark:text-indigo-400"
+          )}
+        >
           {label}
         </span>
       }

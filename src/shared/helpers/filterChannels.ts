@@ -72,5 +72,9 @@ export const filterChannelByType = (server: IServer, profileId: string) => {
     },
   ];
 
-  return channelTypes;
+  return {
+    types: channelTypes,
+    channels: filterChannels,
+    members,
+  };
 };

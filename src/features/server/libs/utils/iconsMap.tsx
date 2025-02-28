@@ -6,3 +6,9 @@ export const iconMap = {
   [ChannelType.AUDIO]: <Mic className="mr-2 h-4 w-4" />,
   [ChannelType.VIDEO]: <Video className="mr-2 h-4 w-4" />,
 };
+
+export const iconMapParse = {
+  [ChannelType.TEXT]: Hash,
+  [ChannelType.AUDIO]: Mic,
+  [ChannelType.VIDEO]: Video,
+};

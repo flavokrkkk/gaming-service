@@ -28,14 +28,19 @@ const ServerSearchGroupCard: FC<IServerSearchGroupCard> = ({
       key={id}
       onSelect={handleRoute}
       className={cn(
-        "flex items-center gap-3 px-4 py-2.5 text-zinc-200 rounded-lg cursor-pointer",
-        "hover:bg-indigo-600/10 hover:text-white transition-all duration-200",
-        " data-[selected=true]:text-white",
-        "group relative overflow-hidden"
+        "flex items-center gap-3 px-4 py-2.5 rounded-lg cursor-pointer transition-all duration-200",
+        "text-gray-800 hover:bg-indigo-100 hover:text-indigo-700",
+        "dark:text-zinc-200 dark:hover:text-white",
+        "data-[selected=true]:bg-indigo-200 data-[selected=true]:text-indigo-800",
+        "dark:data-[selected=true]:bg-indigo-400/20 dark:data-[selected=true]:text-white"
       )}
     >
-      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-      <span className="text-zinc-400 group-hover:text-indigo-300 transition-colors duration-200">
+      <span
+        className={cn(
+          "text-gray-500 group-hover:text-indigo-600 transition-colors duration-200",
+          "dark:text-zinc-400 dark:group-hover:text-indigo-300"
+        )}
+      >
         {icon}
       </span>
       <span className="text-sm font-medium">{name}</span>

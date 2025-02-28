@@ -6,6 +6,11 @@ import ServerHeader from "./serverHeader";
 import { ScrollArea } from "@/shared/ui/scrollArea";
 import ServerSearch from "./serverSearch";
 import { filterChannelByType } from "@/shared/helpers/filterChannels";
+import { Separator } from "@/shared/ui/separator";
+import TextChannelList from "@/features/channel/ui/textChannelLIst";
+import VideoChannelList from "@/features/channel/ui/videoChannelList";
+import VoiceChannelList from "@/features/channel/ui/voiceChannelList";
+import MembersList from "@/features/members/ui/membersList";
 
 interface IServerSideBar {
   serverId: string;
@@ -23,7 +28,7 @@ const ServerSideBar: FC<IServerSideBar> = async ({ serverId }) => {
     return redirect("/");
   }
 
-  const filterChannels = filterChannelByType(server, profile.id);
+  const { types, channels, members } = filterChannelByType(server, profile.id);
 
   const role = server.members?.find(
     (member) => member.profileId === profile.id
@@ -36,8 +41,35 @@ const ServerSideBar: FC<IServerSideBar> = async ({ serverId }) => {
       <ServerHeader server={server} role={role} />
       <ScrollArea className="flex-1 px-3">
         <div className="mt-2">
-          <ServerSearch data={filterChannels} />
+          <ServerSearch data={types} />
         </div>
+        <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
+        {!!channels?.textChannels.length && (
+          <TextChannelList
+            role={role}
+            server={server}
+            textChannels={channels.textChannels}
+          />
+        )}
+        {!!channels?.audioChannels.length && (
+          <VoiceChannelList
+            role={role}
+            server={server}
+            audioChannels={channels.audioChannels}
+          />
+        )}
+
+        {!!channels?.videoChannels.length && (
+          <VideoChannelList
+            role={role}
+            server={server}
+            videoChannels={channels.videoChannels}
+          />
+        )}
+
+        {!!members?.length && (
+          <MembersList role={role} server={server} members={members} />
+        )}
       </ScrollArea>
     </div>
   );
