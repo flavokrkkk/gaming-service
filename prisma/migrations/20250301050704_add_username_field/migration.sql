@@ -8,6 +8,7 @@ CREATE TYPE "ChannelType" AS ENUM ('TEXT', 'AUDIO', 'VIDEO');
 CREATE TABLE "Profile" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
+    "username" TEXT,
     "name" TEXT NOT NULL,
     "imageUrl" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -47,6 +48,7 @@ CREATE TABLE "Channel" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "type" "ChannelType" NOT NULL DEFAULT 'TEXT',
+    "isPrivate" BOOLEAN NOT NULL DEFAULT false,
     "profileId" TEXT NOT NULL,
     "serverId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -57,6 +59,12 @@ CREATE TABLE "Channel" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Profile_userId_key" ON "Profile"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Profile_username_key" ON "Profile"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Server_inviteCode_key" ON "Server"("inviteCode");
 
 -- CreateIndex
 CREATE INDEX "Server_profileId_idx" ON "Server"("profileId");
