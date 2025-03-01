@@ -20,11 +20,17 @@ const ServerSection: FC<IServerSection> = ({
   label,
   server,
   role,
+  channelType,
   sectionType,
 }) => {
   const { setIsOpen } = useActions();
 
-  const handleOpenCreateChannel = () => setIsOpen({ type: "createChannel" });
+  const handleOpenCreateChannel = () => {
+    setIsOpen({
+      type: "createChannel",
+      data: { server, channelType: channelType },
+    });
+  };
   const handleOpenMembers = () =>
     setIsOpen({ type: "members", data: { server } });
 

@@ -7,6 +7,7 @@ export interface ICurrentUser {
   imageUrl: string;
   email: string;
   servers?: Array<IServer>;
+  username: string;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -55,6 +55,39 @@ class ServerQuery {
     return server;
   }
 
+  public async getServerByIdToChannels({
+    serverId,
+    profileId,
+  }: {
+    serverId: string;
+    profileId: string;
+  }): Promise<IServer | null> {
+    const server = await db.server.findUnique({
+      where: {
+        id: serverId,
+        members: {
+          some: {
+            profileId,
+          },
+        },
+      },
+      include: {
+        channels: {
+          where: {
+            name: "general",
+          },
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
+      },
+    });
+
+    if (!server) return null;
+
+    return server;
+  }
+
   public async getServerChannel({
     serverId,
   }: {
@@ -161,5 +194,6 @@ export const {
   getServerById,
   getServerChannel,
   getServerByInviteCode,
+  getServerByIdToChannels,
   setInviteMember,
 } = ServerQuery.getInstance();

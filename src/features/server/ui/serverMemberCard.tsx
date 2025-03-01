@@ -11,7 +11,7 @@ const ServerMemberCard: FC<IServerMemberCard & PropsWithChildren> = ({
   member: {
     id,
     role,
-    profile: { name, imageUrl, email },
+    profile: { imageUrl, email, username },
   },
 }) => {
   return (
@@ -27,7 +27,7 @@ const ServerMemberCard: FC<IServerMemberCard & PropsWithChildren> = ({
       <div className="flex flex-col gap-y-0.5 flex-1">
         <div className="flex items-center gap-x-2">
           <span className="text-sm font-semibold text-white tracking-wide">
-            {name}
+            {username}
           </span>
           {roleIconMap[role] && (
             <span className="text-indigo-400">{roleIconMap[role]}</span>

@@ -12,19 +12,17 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ChannelCreateForm from "./channelCreateForm";
-import { useCreateChannel } from "../hooks/useCreateChannel";
-import { useParams } from "next/navigation";
+import { useUpdateChannel } from "../hooks/useUpdateChannel";
 
-const ChannelCreateModal = () => {
+const ChannelEditModal = () => {
   const isOpen = useAppSelector(serverSelectors.isOpen);
   const type = useAppSelector(serverSelectors.type);
   const channelType = useAppSelector(serverSelectors.selectChannelType);
-
-  const params = useParams();
+  const selectData = useAppSelector(serverSelectors.selectServers);
 
   const { setClose } = useActions();
 
-  const { mutate } = useCreateChannel();
+  const { mutate } = useUpdateChannel();
 
   const form = useForm<TypeCreateChannelFormSchema>({
     resolver: zodResolver(CreateChannelFormSchema),
@@ -36,18 +34,18 @@ const ChannelCreateModal = () => {
   });
 
   const isModalOpen = useMemo(() => {
-    const shouldReset = isOpen && type === "createChannel";
+    const shouldReset = isOpen && type === "editChannel";
 
     if (shouldReset) {
       form.reset({
-        name: "",
-        type: channelType,
-        isPrivate: false,
+        name: selectData?.channel?.name,
+        type: selectData?.channel?.type,
+        isPrivate: selectData?.channel?.isPrivate,
       });
     }
 
     return shouldReset;
-  }, [type, isOpen, channelType, form]);
+  }, [type, isOpen, channelType, form, selectData]);
 
   const onClose = useCallback(() => {
     form.reset();
@@ -56,11 +54,15 @@ const ChannelCreateModal = () => {
 
   const handleMutateChannel = useCallback(
     (values: TypeCreateChannelFormSchema) => {
-      if (params.serverId) {
-        mutate({ serverId: params.serverId as string, ...values });
+      if (selectData?.channel?.id && selectData?.server?.id) {
+        mutate({
+          channelId: selectData?.channel?.id,
+          serverId: selectData?.server?.id,
+          ...values,
+        });
       }
     },
-    [params, mutate]
+    [mutate, selectData?.channel?.id, selectData?.server?.id]
   );
 
   return (
@@ -68,11 +70,12 @@ const ChannelCreateModal = () => {
       <DialogContent className="bg-zinc-900 text-white border border-zinc-800 rounded-lg shadow-2xl mx-auto overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
-            Create Channel
+            Edit Channel
           </DialogTitle>
         </DialogHeader>
         {isModalOpen && (
           <ChannelCreateForm
+            type="edit"
             form={form}
             onEvent={onClose}
             onMutate={handleMutateChannel}
@@ -83,4 +86,4 @@ const ChannelCreateModal = () => {
   );
 };
 
-export default ChannelCreateModal;
+export default ChannelEditModal;

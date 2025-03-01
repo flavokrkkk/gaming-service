@@ -18,7 +18,7 @@ const NavigateServerBar = async () => {
   const servers = await getAllServers({ profileId: profile.id });
 
   return (
-    <div className="space-y-4 flex flex-col items-center h-full text-primary w-full dark:bg-gray-mode-300 py-3">
+    <div className="space-y-4 flex flex-col items-center h-full text-primary w-full dark:bg-gray-mode-300 bg-[#E3E5E8] py-3">
       <NavigateServerAction />
       <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
       <ScrollArea className="flex-1 w-full">
@@ -34,12 +34,10 @@ const NavigateServerBar = async () => {
       </ScrollArea>
       <div className="pb-3 mt-auto flex items-center flex-col gap-y-4">
         <ThemeSwitcher />
-        <Suspense fallback={<Skeleton className="h-12 w-12 rounded-full " />}>
-          <UserAvatar
-            src={profile.imageUrl}
-            className="h-[48px] cursor-pointer w-[48px] rounded-full transition-all duration-200 group-hover:scale-105 group-hover:ring-2 group-hover:ring-emerald-500"
-          />
-        </Suspense>
+        <UserAvatar
+          src={profile.imageUrl}
+          className="h-[48px] cursor-pointer w-[48px] rounded-full transition-all duration-200 group-hover:scale-105 group-hover:ring-2 group-hover:ring-emerald-500"
+        />
       </div>
     </div>
   );

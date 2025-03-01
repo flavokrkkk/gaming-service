@@ -1,13 +1,14 @@
 "use client";
 
 import { cn } from "@/shared";
+import { useSkeletonImage } from "@/shared/hooks/useSkeletonImage";
 import { ERouteNames } from "@/shared/libs/utils/pathVariables";
 import { Skeleton } from "@/shared/ui/skeleton/skeleton";
 import TooltipAction from "@/shared/ui/tooltip/tooltipAction";
 import clsx from "clsx";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 
 interface INavigateServerItem {
   id: string;
@@ -20,13 +21,11 @@ const NavigateServerItem: FC<INavigateServerItem> = ({
   imageUrl,
   name,
 }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const { isLoaded, handleIsLoaded } = useSkeletonImage();
   const router = useRouter();
   const params = useParams();
 
   const handleNavigate = () => router.push(`${ERouteNames.SERVERS}/${id}`);
-
-  const handleIsLoaded = () => setIsLoaded(true);
 
   return (
     <TooltipAction side="right" align="center" label={name}>

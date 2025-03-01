@@ -14,24 +14,27 @@ import { useActions } from "@/shared/hooks/useActions";
 import { useAppSelector } from "@/shared/hooks/useAppSelector";
 import { AlertTriangle } from "lucide-react";
 import { Separator } from "@/shared/ui/separator";
-import { useDeleteServer } from "../hooks/useDeleteServer";
+import { useDeleteChannel } from "../hooks/useDeleteChannel";
 
-const ServerDeleteModal = () => {
+const ChannelDeleteModal = () => {
   const isOpen = useAppSelector(serverSelectors.isOpen);
   const type = useAppSelector(serverSelectors.type);
-  const selectServers = useAppSelector(serverSelectors.selectServers);
+  const selectData = useAppSelector(serverSelectors.selectServers);
 
-  const { mutate, isPending } = useDeleteServer();
+  const { mutate, isPending } = useDeleteChannel();
 
   const { setClose } = useActions();
 
-  const isModalOpen = isOpen && type === "deleteServer";
+  const isModalOpen = isOpen && type === "deleteChannel";
 
   const handleClose = () => setClose();
 
   const handleDeleteServer = () => {
-    if (selectServers?.server) {
-      mutate({ serverId: selectServers?.server.id });
+    if (selectData?.server?.id && selectData?.channel?.id) {
+      mutate({
+        serverId: selectData?.server?.id,
+        id: selectData?.channel?.id,
+      });
     }
   };
 
@@ -41,13 +44,13 @@ const ServerDeleteModal = () => {
         <div className="flex items-center justify-center pt-8">
           <AlertTriangle className="h-8 w-8 text-red-500 mr-3" />
           <DialogTitle className="text-2xl font-bold text-center">
-            Delete Server
+            Delete Channel
           </DialogTitle>
         </div>
         <DialogDescription className="px-6 text-center text-zinc-400 text-base leading-relaxed">
           Are you sure you want to do this ? <br />
           <span className="font-semibold text-indigo-400">
-            {selectServers?.server?.name}
+            {`#${selectData?.channel?.name}`}
           </span>{" "}
           will be permanently deleted.
         </DialogDescription>
@@ -74,4 +77,4 @@ const ServerDeleteModal = () => {
   );
 };
 
-export default ServerDeleteModal;
+export default ChannelDeleteModal;

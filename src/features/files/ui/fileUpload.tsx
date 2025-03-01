@@ -4,6 +4,8 @@ import { FC } from "react";
 import { UploadDropzone } from "@/shared/libs/utils/uploadthing";
 import Image from "next/image";
 import { X } from "lucide-react";
+import { Skeleton } from "@/shared/ui/skeleton/skeleton";
+import { useSkeletonImage } from "@/shared/hooks/useSkeletonImage";
 
 interface IFileUpload {
   endpoint: "messageFile" | "serverImage";
@@ -13,14 +15,22 @@ interface IFileUpload {
 
 const FileUpload: FC<IFileUpload> = ({ endpoint, value, onChange }) => {
   const fileType = value.split(".")[0];
-
+  const { isLoaded, handleIsLoaded } = useSkeletonImage();
   const resetFiles = () => onChange("");
 
   if (value && fileType !== "pdf") {
     return (
       <section className="flex justify-center w-full">
         <div className="relative h-20 w-20 ">
-          <Image fill src={value} alt="Upload" className="rounded-full" />
+          {!isLoaded && <Skeleton className="h-20 w-20 rounded-full" />}
+          <Image
+            fill
+            src={value}
+            alt="Upload"
+            loading="lazy"
+            className="rounded-full"
+            onLoad={handleIsLoaded}
+          />
           <button
             className="bg-rose-500 text-white p-1 rounded-full absolute top-0 right-0 shadow-sm"
             type="button"

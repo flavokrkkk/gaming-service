@@ -28,6 +28,7 @@ import { Switch } from "@/shared/ui/switch/switch";
 import { Lock, Unlock } from "lucide-react";
 
 interface IServerCustomizeForm {
+  type?: "create" | "edit";
   form: UseFormReturn<
     {
       name: string;
@@ -43,6 +44,7 @@ interface IServerCustomizeForm {
 
 const ChannelCreateForm: FC<IServerCustomizeForm> = ({
   form,
+  type = "create",
   onEvent = () => {},
   onMutate,
 }) => {
@@ -146,7 +148,7 @@ const ChannelCreateForm: FC<IServerCustomizeForm> = ({
         </div>
         <div className="px-6 py-4">
           <Button variant={"indigo"} className="w-full">
-            Create
+            {type === "create" ? "Create" : "Save"}
           </Button>
         </div>
       </form>

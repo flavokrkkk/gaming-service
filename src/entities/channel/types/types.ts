@@ -10,6 +10,8 @@ export interface IChannel {
 
   serverId: IServer["id"];
 
+  isPrivate: boolean;
+
   createdAt: Date;
   updatedAt: Date;
 }

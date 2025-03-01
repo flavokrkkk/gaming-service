@@ -3,6 +3,7 @@ import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { JWT } from "next-auth/jwt";
+import { getToken } from "next-auth/jwt";
 
 interface CustomJWT extends JWT {
   id?: string;
@@ -18,11 +19,11 @@ interface AuthRequest extends NextRequest {
 }
 
 export default withAuth(
-  function middleware(req: AuthRequest) {
+  async function middleware(req: AuthRequest) {
     const { pathname } = req.nextUrl;
-    const token = req.nextauth.token;
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-    if (token && pathname === "/sign-in") {
+    if (token && (pathname === "/sign-in" || pathname === "/sign-up")) {
       return NextResponse.redirect(new URL("/", req.url));
     }
 
@@ -30,7 +31,7 @@ export default withAuth(
       return NextResponse.next();
     }
 
-    if (!token && pathname !== "/sign-in") {
+    if (!token && pathname !== "/sign-in" && pathname !== "/sign-up") {
       return NextResponse.redirect(new URL("/sign-in", req.url));
     }
 
@@ -57,7 +58,9 @@ export default withAuth(
 
 export const config = {
   matcher: [
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    "/",
+    "/sign-in",
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)", // Все остальные маршруты
     "/(api|trpc)(.*)",
   ],
 };
