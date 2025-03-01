@@ -1,9 +1,8 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
 import { ICurrentUser } from "../types/types";
-import { redirect, RedirectType } from "next/navigation";
-import { ERouteNames } from "@/shared/libs/utils/pathVariables";
 import { db } from "@/shared/db";
 import { customRoles } from "../utils/castomName";
+import { getServerSession, User } from "next-auth";
+import { authOptions } from "@/shared/libs/auth";
 
 class UserQuery {
   private static instance: UserQuery;
@@ -45,23 +44,8 @@ class UserQuery {
     return username;
   }
 
-  private getName({
-    firstName,
-    lastName,
-  }: {
-    firstName: string;
-    lastName: string;
-  }): string {
-    if (firstName && lastName) return `${firstName} ${lastName}`;
-    if (firstName) return firstName;
-    if (lastName) return lastName;
-    return "Unknown";
-  }
-
-  public async getCurrentUser(): Promise<ICurrentUser> {
-    const user = await currentUser();
-
-    if (!user) return redirect(ERouteNames.SIGN_IN, RedirectType.replace);
+  public async getCurrentUser(user: User): Promise<ICurrentUser | null> {
+    if (!user) return null;
 
     const profile = await db.profile.findUnique({
       where: {
@@ -79,19 +63,21 @@ class UserQuery {
       data: {
         userId: user.id,
         username: uniqueUsername,
-        name: this.getName({
-          firstName: user.firstName ?? "",
-          lastName: user.lastName ?? "",
-        }),
-        imageUrl: user.imageUrl,
-        email: user.emailAddresses[0].emailAddress,
+        name: user.name ?? "unknown",
+        imageUrl: user.image ?? "",
+        email: user.email ?? "",
       },
     });
 
     return newProfile;
   }
   public async getCurrentProfile() {
-    const { userId } = await auth();
+    const session = await getServerSession(authOptions);
+
+    if (!session || !session.user?.id) return null;
+
+    const userId = session.user.id;
+
     if (!userId) return null;
     const profile = await db.profile.findUnique({
       where: {
@@ -102,5 +88,8 @@ class UserQuery {
     return profile;
   }
 }
+export const instance = UserQuery.getInstance();
 
-export const { getCurrentUser, getCurrentProfile } = UserQuery.getInstance();
+export const { getCurrentProfile, getCurrentUser } = instance;
+
+export const getCurrentUserAuth = getCurrentUser.bind(instance);

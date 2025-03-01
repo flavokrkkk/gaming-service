@@ -6,12 +6,12 @@ import { Toaster } from "sonner";
 import ThemeProvider from "./themeProvider";
 import { Provider } from "react-redux";
 import { store } from "../store";
-import { ClerkProvider } from "@clerk/nextjs";
+import { SessionProvider } from "next-auth/react";
 import ModalProvider from "./modalProvider";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ClerkProvider>
+    <SessionProvider>
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
           <ThemeProvider
@@ -26,6 +26,6 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           </ThemeProvider>
         </Provider>
       </QueryClientProvider>
-    </ClerkProvider>
+    </SessionProvider>
   );
 }

@@ -5,10 +5,10 @@ import { Separator } from "@/shared/ui/separator";
 import { ScrollArea } from "@/shared/ui/scrollArea";
 import NavigateServerItem from "./navigateServerItem";
 import ThemeSwitcher from "@/features/theme/ui/themeSwitcher";
-import { UserButton } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { Skeleton } from "@/shared/ui/skeleton/skeleton";
+import UserAvatar from "@/features/user/ui/userAvatar";
 
 const NavigateServerBar = async () => {
   const profile = await getCurrentProfile();
@@ -34,16 +34,12 @@ const NavigateServerBar = async () => {
       </ScrollArea>
       <div className="pb-3 mt-auto flex items-center flex-col gap-y-4">
         <ThemeSwitcher />
-        <UserButton
-          afterSignOutUrl="/sign-in"
-          appearance={{
-            elements: {
-              avatarBox:
-                "h-[48px] w-[48px] rounded-full transition-all duration-200 group-hover:scale-105 group-hover:ring-2 group-hover:ring-emerald-500",
-            },
-          }}
-          fallback={<Skeleton className="h-12 w-12 rounded-full " />}
-        />
+        <Suspense fallback={<Skeleton className="h-12 w-12 rounded-full " />}>
+          <UserAvatar
+            src={profile.imageUrl}
+            className="h-[48px] cursor-pointer w-[48px] rounded-full transition-all duration-200 group-hover:scale-105 group-hover:ring-2 group-hover:ring-emerald-500"
+          />
+        </Suspense>
       </div>
     </div>
   );
