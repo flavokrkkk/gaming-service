@@ -28,7 +28,7 @@ export default function RootLayout({
         className={cn(
           `antialiased`,
           font.variable,
-          "bg-white dark:bg-gray-mode-200"
+          "bg-white dark:bg-gray-mode-200 overflow-hidden"
         )}
       >
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />

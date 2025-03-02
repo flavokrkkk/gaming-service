@@ -30,7 +30,7 @@ const ServerLeaveModal = () => {
   const handleClose = () => setClose();
 
   const handleLeaveServer = () =>
-    mutate({ serverId: selectServers?.server.id });
+    mutate({ serverId: selectServers?.server?.id });
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
@@ -44,7 +44,7 @@ const ServerLeaveModal = () => {
         <DialogDescription className="px-6 text-center text-zinc-400 text-base leading-relaxed">
           Are you sure you want to leave
           <span className="font-semibold text-indigo-400 ml-1">
-            {selectServers?.server.name}
+            {selectServers?.server?.name}
           </span>
           ?
         </DialogDescription>

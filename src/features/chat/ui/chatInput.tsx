@@ -5,7 +5,10 @@ import { useForm } from "react-hook-form";
 import { ChatFormSchema, TypeChatFormSchema } from "../schemes/chatFormShcema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, Input } from "@/shared";
-import { Plus, Smile } from "lucide-react";
+import { Plus } from "lucide-react";
+import { useChatMessage } from "../hooks/useChatMessage";
+import { useActions } from "@/shared/hooks/useActions";
+import EmojiPicker from "@/features/emoji/ui/emojiPicker";
 
 interface IChatInput {
   apiUrl: string;
@@ -14,7 +17,9 @@ interface IChatInput {
   type: "conversation" | "channel";
 }
 
-const ChatInput: FC<IChatInput> = ({}) => {
+const ChatInput: FC<IChatInput> = ({ type, apiUrl, name, query }) => {
+  const { setIsOpen } = useActions();
+
   const form = useForm<TypeChatFormSchema>({
     resolver: zodResolver(ChatFormSchema),
     defaultValues: {
@@ -22,11 +27,20 @@ const ChatInput: FC<IChatInput> = ({}) => {
     },
   });
 
+  const { isPending, mutate } = useChatMessage();
+
   const isLoading = form.formState.isSubmitting;
 
+  const placeholderText =
+    type === "conversation" ? `Message ${name}` : `Message #${name}`;
+
   const onSudmit = (values: TypeChatFormSchema) => {
-    console.log(values);
+    mutate({ apiUrl, query, requestBody: values });
+    form.reset();
   };
+
+  const handleFilePinModal = () =>
+    setIsOpen({ type: "messageFile", data: { apiUrl, query } });
 
   return (
     <Form {...form}>
@@ -40,19 +54,23 @@ const ChatInput: FC<IChatInput> = ({}) => {
                 <div className="relative p-4 pb-6">
                   <button
                     type="button"
-                    onClick={() => {}}
+                    onClick={handleFilePinModal}
                     className="absolute top-7 left-8 h-[24px] w-[24px] bg-zinc-500 dark:bg-zinc-400 hover:bg-zinc-600 dark:hover:bg-zinc-300 transition-all rounded-full p-1 flex items-center justify-center"
                   >
                     <Plus className="text-white dark:text-gray-mode-200" />
                   </button>
                   <Input
                     {...field}
-                    placeholder="Message..."
-                    disabled={isLoading}
-                    className="px-14 py-6 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200"
+                    placeholder={placeholderText}
+                    disabled={isLoading || isPending}
+                    className="px-14  py-6 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-300 placeholder:text-zinc-500 dark:placeholder:text-zinc-500 placeholder:font-semibold placeholder:text-base !text-base"
                   />
                   <div className="absolute top-7 right-8">
-                    <Smile className="text-zinc-600 dark:text-zinc-200" />
+                    <EmojiPicker
+                      onChange={(emoji: string) =>
+                        field.onChange(`${field.value}${emoji}`)
+                      }
+                    />
                   </div>
                 </div>
               </FormControl>

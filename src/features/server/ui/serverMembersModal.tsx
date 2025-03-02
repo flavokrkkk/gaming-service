@@ -63,7 +63,7 @@ const ServerMembersModal = () => {
             Manage Members
           </DialogTitle>
           <DialogDescription className="text-center text-zinc-400 text-sm">
-            {selectServers?.server.members?.length} Members
+            {selectServers?.server?.members?.length} Members
           </DialogDescription>
         </DialogHeader>
 
@@ -71,7 +71,7 @@ const ServerMembersModal = () => {
           {selectServers?.server?.members ? (
             selectServers?.server?.members.map((member) => (
               <ServerMemberCard key={member.id} member={member}>
-                {selectServers?.server.profileId !== member.profileId &&
+                {selectServers?.server?.profileId !== member.profileId &&
                   loadingId !== member.id && (
                     <ServerMemberControl
                       member={member}

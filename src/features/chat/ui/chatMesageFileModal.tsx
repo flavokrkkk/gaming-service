@@ -13,65 +13,61 @@ import { useActions } from "@/shared/hooks/useActions";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CustomizeFormSchema, TypeCustomizeFormSchema } from "../schemes";
-import ServerCustomizeForm from "./serverCustomizeForm";
-import { useUpdateServer } from "../hooks/useUpdateServer";
+import { FileFormSchema, TypeFileFormSchema } from "../schemes/fileFormSchema";
+import ChatMessageFileForm from "./chatMessageFileForm";
+import { useChatMessage } from "../hooks/useChatMessage";
 
-const ServerEditModal = () => {
+const ChatMessageFileModal = () => {
   const isOpen = useAppSelector(serverSelectors.isOpen);
   const type = useAppSelector(serverSelectors.type);
-  const selectServer = useAppSelector(serverSelectors.selectServers);
-
-  const { mutate } = useUpdateServer({
-    serverId: selectServer?.server?.id ?? "",
-  });
+  const selectServers = useAppSelector(serverSelectors.selectServers);
 
   const { setClose } = useActions();
 
-  const form = useForm<TypeCustomizeFormSchema>({
-    resolver: zodResolver(CustomizeFormSchema),
+  const { mutate } = useChatMessage();
+
+  const form = useForm<TypeFileFormSchema>({
+    resolver: zodResolver(FileFormSchema),
     defaultValues: {
-      name: "",
-      imageUrl: "",
+      fileUrl: "",
     },
   });
 
   const { isModalOpen, onClose } = useMemo(() => {
-    const shouldReset = isOpen && type === "editServer" && selectServer;
-
-    if (shouldReset) {
-      form.reset({
-        name: selectServer.server?.name,
-        imageUrl: selectServer.server?.imageUrl,
-      });
-    }
-
     return {
-      isModalOpen: isOpen && type === "editServer",
+      isModalOpen: isOpen && type === "messageFile",
       onClose: () => {
         form.reset();
         setClose();
       },
     };
-  }, [form, isOpen, type, selectServer]);
+  }, [form, setClose, isOpen, type]);
+
+  const handleMutation = (values: TypeFileFormSchema) => {
+    if (selectServers?.apiUrl && selectServers.query) {
+      mutate({
+        apiUrl: selectServers?.apiUrl,
+        query: selectServers?.query,
+        requestBody: { ...values, content: values.fileUrl },
+      });
+    }
+  };
 
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
       <DialogContent className="bg-zinc-900 text-white border border-zinc-800 rounded-lg shadow-2xl mx-auto overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
-            Customize your server
+            Add an attachment
           </DialogTitle>
           <DialogDescription className="text-center text-zinc-500">
-            Give your server a personality with a name an image. You can always
-            change it later
+            Send a file as a message
           </DialogDescription>
         </DialogHeader>
         {isModalOpen && (
-          <ServerCustomizeForm
+          <ChatMessageFileForm
             form={form}
-            type="update"
-            onMutate={mutate}
+            onMutate={handleMutation}
             onEvent={onClose}
           />
         )}
@@ -80,4 +76,4 @@ const ServerEditModal = () => {
   );
 };
 
-export default ServerEditModal;
+export default ChatMessageFileModal;

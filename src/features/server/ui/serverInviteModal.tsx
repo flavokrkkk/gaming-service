@@ -25,7 +25,7 @@ const ServerInviteModal = () => {
   const selectServers = useAppSelector(serverSelectors.selectServers);
 
   const { isPending, mutate } = useGenerateInviteCode({
-    serverId: selectServers?.server.id ?? "",
+    serverId: selectServers?.server?.id ?? "",
   });
 
   const { setClose } = useActions();
@@ -33,7 +33,7 @@ const ServerInviteModal = () => {
   const { handleCopyClick, isCopied, isPending: isLoading } = useCopied();
 
   const inviteUrl = useMemo(
-    () => `${origin}/invite/${selectServers?.server.inviteCode}`,
+    () => `${origin}/invite/${selectServers?.server?.inviteCode}`,
     [selectServers?.server, origin]
   );
 

@@ -11,12 +11,15 @@ export type ModalType =
   | "leaveServer"
   | "deleteServer"
   | "deleteChannel"
-  | "editChannel";
+  | "editChannel"
+  | "messageFile";
 
 export interface IModalData {
   server?: IServer;
   channel?: IChannel;
   channelType?: ChannelType;
+  apiUrl?: string;
+  query?: Record<string, unknown>;
 }
 
 export interface IServerSliceState {

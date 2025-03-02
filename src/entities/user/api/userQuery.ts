@@ -3,6 +3,7 @@ import { db } from "@/shared/db";
 import { customRoles } from "../utils/castomName";
 import { getServerSession, User } from "next-auth";
 import { authOptions } from "@/shared/libs/auth";
+import { NextApiRequest, NextApiResponse } from "next";
 
 class UserQuery {
   private static instance: UserQuery;
@@ -87,9 +88,31 @@ class UserQuery {
 
     return profile;
   }
+
+  public async getCurrentProfileAuthApi(
+    req: NextApiRequest,
+    res: NextApiResponse
+  ) {
+    const session = await getServerSession(req, res, authOptions);
+
+    if (!session || !session.user?.id) return null;
+
+    const userId = session.user.id;
+
+    if (!userId) return null;
+    const profile = await db.profile.findUnique({
+      where: {
+        userId,
+      },
+    });
+
+    return profile;
+  }
 }
 export const instance = UserQuery.getInstance();
 
-export const { getCurrentProfile, getCurrentUser } = instance;
+export const { getCurrentProfile, getCurrentUser, getCurrentProfileAuthApi } =
+  instance;
 
 export const getCurrentUserAuth = getCurrentUser.bind(instance);
+export const getCurrentProfileAuth = getCurrentProfileAuthApi.bind(instance);

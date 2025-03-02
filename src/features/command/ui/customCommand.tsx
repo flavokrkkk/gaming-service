@@ -26,7 +26,7 @@ const CustomCommand: FC<ICustomCommand & PropsWithChildren> = ({
   title,
   setIsOpen,
 }) => {
-  const isKeyboard = useKeyPress(["Control", "k"]);
+  const isKeyboard = useKeyPress([""]);
 
   useEffect(() => {
     if (isKeyboard) {

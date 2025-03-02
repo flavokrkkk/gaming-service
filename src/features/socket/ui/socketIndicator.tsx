@@ -7,6 +7,7 @@ import React from "react";
 
 const SocketIndicator = () => {
   const isConnected = useAppSelector(socketSelectors.isConnected);
+  // const socket = useAppSelector(socketSelectors.socket);
 
   if (!isConnected) {
     return (
