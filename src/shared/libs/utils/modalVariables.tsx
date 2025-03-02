@@ -2,6 +2,7 @@ import { ModalType } from "@/entities/server/models/types/types";
 import ChannelCreateModal from "@/features/channel/ui/channelCreateModal";
 import ChannelDeleteModal from "@/features/channel/ui/channelDeleteModal";
 import ChannelEditModal from "@/features/channel/ui/channelEditModal";
+import ChatDeleteMessageModal from "@/features/chat/ui/chatDeleteMessageModal";
 import ChatMessageFileModal from "@/features/chat/ui/chatMesageFileModal";
 import ServerCustomizeModal from "@/features/server/ui/serverCustomizeModal";
 import ServerDeleteModal from "@/features/server/ui/serverDeleteModal";
@@ -22,4 +23,5 @@ export const uniqueModal: Record<ModalType, JSX.Element> = {
   ["deleteChannel"]: <ChannelDeleteModal />,
   ["editChannel"]: <ChannelEditModal />,
   ["messageFile"]: <ChatMessageFileModal />,
+  ["deleteMessage"]: <ChatDeleteMessageModal />,
 };

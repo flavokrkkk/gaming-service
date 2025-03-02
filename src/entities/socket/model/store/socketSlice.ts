@@ -29,11 +29,13 @@ export const socketSlice = createSliceWithThunks({
     connectionSocket: create.asyncThunk<Socket, void, { rejectValue: string }>(
       async (_, { rejectWithValue }) => {
         try {
-          const socket = io(process.env.NEXT_PUBLIC_SITE_URL!, {
-            path: "http://localhost:3000/api/socket/io",
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const socket = new (io as any)(process.env.NEXT_PUBLIC_SITE_URL!, {
+            path: "/api/socket/io",
             addTrailingSlash: false,
-            transports: ["websocket"],
+            // transports: ["websocket"],
           });
+
           return socket;
         } catch (err) {
           return rejectWithValue(`${err}`);
@@ -45,9 +47,6 @@ export const socketSlice = createSliceWithThunks({
           state.error = "";
         },
         fulfilled: (state, { payload }: PayloadAction<Socket>) => {
-          if (state.socket) {
-            state.socket.disconnect();
-          }
           return {
             ...state,
             socket: payload,

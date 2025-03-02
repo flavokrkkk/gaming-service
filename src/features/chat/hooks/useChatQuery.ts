@@ -1,7 +1,5 @@
 import { getChatMessages } from "@/entities/message/libs/messageService";
 import { IChatQuery, MessagePage } from "@/entities/message/types/types";
-import { socketSelectors } from "@/entities/socket/model/store/socketSlice";
-import { useAppSelector } from "@/shared/hooks/useAppSelector";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 export const useChatQuery = ({
@@ -11,11 +9,9 @@ export const useChatQuery = ({
   paramValue,
   channelId,
 }: IChatQuery) => {
-  const isConnected = useAppSelector(socketSelectors.isConnected);
-
   const { data, fetchNextPage, hasNextPage, isFetchNextPageError, status } =
     useInfiniteQuery<MessagePage, Error>({
-      queryKey: [queryKey, channelId],
+      queryKey: [queryKey],
       queryFn: ({ pageParam }) =>
         getChatMessages({
           pageParam: pageParam as string,
@@ -27,7 +23,7 @@ export const useChatQuery = ({
 
       getNextPageParam: (lastPage) => lastPage?.nextCursor || undefined,
       initialPageParam: undefined,
-      refetchInterval: isConnected ? false : 1000,
+      refetchInterval: false,
     });
 
   return {

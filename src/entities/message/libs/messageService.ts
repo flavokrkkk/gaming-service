@@ -1,6 +1,7 @@
 import axios from "axios";
 import qs from "query-string";
 import { IChatQuery, ISendMessageRequest, MessagePage } from "../types/types";
+import { TypeChatFormSchema } from "@/features/chat/schemes/chatFormShcema";
 
 class MessageService {
   private static instance: MessageService;
@@ -56,6 +57,44 @@ class MessageService {
     const { data } = await axios.get<MessagePage>(url);
     return data;
   }
+
+  public async editedMessage({
+    content,
+    queryUrl,
+    query,
+    messageId,
+  }: TypeChatFormSchema & {
+    queryUrl: string;
+    query: Record<string, string>;
+    messageId: string;
+  }) {
+    const url = qs.stringifyUrl({
+      url: `${queryUrl}/${messageId}`,
+      query: { ...query },
+    });
+
+    const { data } = await axios.patch(url, { content });
+
+    return data;
+  }
+
+  public async deletedMessage({
+    apiUrl,
+    query,
+  }: {
+    apiUrl: string;
+    query: Record<string, string>;
+  }) {
+    const url = qs.stringifyUrl({
+      url: apiUrl,
+      query: { ...query },
+    });
+
+    const { data } = await axios.delete(url);
+
+    return data;
+  }
 }
 
-export const { sendMessage, getChatMessages } = MessageService.getInstance();
+export const { sendMessage, getChatMessages, editedMessage, deletedMessage } =
+  MessageService.getInstance();

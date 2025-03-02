@@ -3,13 +3,29 @@
 import { IMember } from "@/entities/member/types/types";
 import { roleIconMap } from "@/features/server/libs/utils";
 import UserAvatar from "@/features/user/ui/userAvatar";
-import { cn } from "@/shared";
+import {
+  Button,
+  cn,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  Input,
+} from "@/shared";
 import TooltipAction from "@/shared/ui/tooltip/tooltipAction";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Member, MemberRole } from "@prisma/client";
 import { Edit, FileText, Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { FC, memo, useMemo, useState, useCallback } from "react";
+import { FC, memo, useMemo, useState, useCallback, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { ChatFormSchema, TypeChatFormSchema } from "../schemes/chatFormShcema";
+import { useKeyPress } from "@/shared/hooks/useKeyPress";
+import { useEditMessage } from "../hooks/useEditMessage";
+import { useActions } from "@/shared/hooks/useActions";
+import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface IChatItem {
   id: string;
@@ -38,7 +54,22 @@ const ChatItem: FC<IChatItem> = memo(
     timestamp,
   }) => {
     const [isEditing, setIsEditing] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false);
+    const { setIsOpen } = useActions();
+    const router = useRouter();
+    const params = useParams();
+
+    const form = useForm<TypeChatFormSchema>({
+      resolver: zodResolver(ChatFormSchema),
+      defaultValues: {
+        content,
+      },
+    });
+
+    const { mutate, isPending } = useEditMessage();
+
+    const isLoading = form.formState.isLoading;
+
+    const isKeyPress = useKeyPress(["Escape"]);
 
     const { isImage, isPDF, isCanDeleteMessage, isCanEditMessage } =
       useMemo(() => {
@@ -65,12 +96,45 @@ const ChatItem: FC<IChatItem> = memo(
       }, [currentMember.role, currentMember.id, deleted, fileUrl, member.id]);
 
     const toggleEdit = useCallback(() => setIsEditing((p) => !p), []);
-    const toggleDelete = useCallback(() => setIsDeleting((p) => !p), []);
+
+    const handleMemberNavigate = () => {
+      if (member.id === currentMember.id) {
+        return;
+      }
+
+      router.push(`/servers/${params?.serverId}/conversations/${member.id}`);
+    };
+
+    const handleOpenDeleteModal = () =>
+      setIsOpen({
+        type: "deleteMessage",
+        data: { apiUrl: `${socketUrl}/${id}`, query: socketQuery },
+      });
+
+    const onSubmit = (values: TypeChatFormSchema) => {
+      mutate({
+        content: values.content,
+        messageId: id,
+        query: socketQuery,
+        queryUrl: socketUrl,
+      });
+      form.reset();
+      setIsEditing(false);
+    };
+
+    useEffect(() => {
+      if (isKeyPress) {
+        setIsEditing(false);
+      }
+    }, [isKeyPress]);
 
     return (
       <div className="relative group flex items-center hover:bg-black/5 p-4 transition-all w-full">
         <div className="group flex gap-x-2 items-start w-full">
-          <div className="cursor-pointer hover:drop-shadow-md transition-all">
+          <div
+            className="cursor-pointer hover:drop-shadow-md transition-all"
+            onClick={handleMemberNavigate}
+          >
             <UserAvatar src={(member as IMember).profile.imageUrl} />
           </div>
           <div className="flex flex-col w-full">
@@ -144,6 +208,43 @@ const ChatItem: FC<IChatItem> = memo(
                 )}
               </p>
             )}
+            {!fileUrl && isEditing && (
+              <Form {...form}>
+                <form
+                  className="flex items-center w-full gap-x-2 pt-2"
+                  onSubmit={form.handleSubmit(onSubmit)}
+                >
+                  <FormField
+                    control={form.control}
+                    name="content"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormControl>
+                          <div className="relative w-full">
+                            <Input
+                              {...field}
+                              disabled={isLoading || isPending}
+                              placeholder="Edited message"
+                              className="p-2 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200"
+                            />
+                          </div>
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    disabled={isLoading || isPending}
+                    size={"sm"}
+                    variant={"indigo"}
+                  >
+                    Save
+                  </Button>
+                </form>
+                <span className="text-[10px] mt-1 text-zinc-400 ">
+                  Press escape to cancel, enter to save
+                </span>
+              </Form>
+            )}
           </div>
         </div>
         {isCanDeleteMessage && (
@@ -157,7 +258,10 @@ const ChatItem: FC<IChatItem> = memo(
               </TooltipAction>
             )}
             <TooltipAction side="top" label="Edit">
-              <Trash className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition-all" />
+              <Trash
+                className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition-all"
+                onClick={handleOpenDeleteModal}
+              />
             </TooltipAction>
           </div>
         )}

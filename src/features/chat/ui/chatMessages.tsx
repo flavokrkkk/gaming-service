@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import ChatItem from "./chatItem";
 import { EDateFormat } from "@/shared/libs/utils/dateFormat";
 import { Separator } from "@/shared/ui/separator";
+import { useChatSocket } from "../hooks/useChatSocket";
 
 interface IChatMessages {
   name: string;
@@ -32,14 +33,20 @@ const ChatMessages: FC<IChatMessages> = ({
   socketUrl,
   type,
 }) => {
+  const queryKey = `chat:${chatId}`;
+  const addKey = `chat:${chatId}:messages`;
+  const updateKey = `chat:${chatId}:messages:update`;
+
   const { data, fetchNextPage, hasNextPage, isFetchNextPageError, status } =
     useChatQuery({
       apiUrl,
       paramKey,
       channelId: chatId,
       paramValue,
-      queryKey: `chat:${chatId}`,
+      queryKey,
     });
+
+  useChatSocket({ queryKey, addKey, updateKey });
 
   if (status === "pending") {
     return (
