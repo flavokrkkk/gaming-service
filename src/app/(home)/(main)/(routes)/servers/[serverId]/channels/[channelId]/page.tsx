@@ -1,6 +1,8 @@
 import { getChannelById } from "@/entities/channel/api/channelQuery";
 import { getChannelMembers } from "@/entities/member/api/memberQuery";
 import { getCurrentProfile } from "@/entities/user/api/userQuery";
+import ChatHeader from "@/features/chat/ui/chatHeader";
+import ChatInput from "@/features/chat/ui/chatInput";
 import { redirect } from "next/navigation";
 import React, { FC } from "react";
 
@@ -25,7 +27,17 @@ const ChannelId: FC<IChannelIdPageProps> = async ({ params }) => {
 
   return (
     <div className="bg-white dark:bg-gray-mode-200 flex flex-col h-full">
-      ChannelId
+      <ChatHeader name={channel.name} type="channel" serverId={serverId} />
+      <div className="flex-1">Future Message</div>
+      <ChatInput
+        name={channel.name}
+        type="channel"
+        apiUrl="/api/socket/messages"
+        query={{
+          channelId: channel.id,
+          serverId: channel.serverId,
+        }}
+      />
     </div>
   );
 };

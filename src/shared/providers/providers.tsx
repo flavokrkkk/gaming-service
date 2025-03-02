@@ -8,6 +8,7 @@ import { Provider } from "react-redux";
 import { store } from "../store";
 import { SessionProvider } from "next-auth/react";
 import ModalProvider from "./modalProvider";
+import SocketProvider from "./socketProvider";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -20,9 +21,11 @@ export default function Providers({ children }: { children: React.ReactNode }) {
             enableSystem={false}
             storageKey="strife-theme"
           >
-            {children}
-            <Toaster />
-            <ModalProvider />
+            <SocketProvider>
+              {children}
+              <Toaster />
+              <ModalProvider />
+            </SocketProvider>
           </ThemeProvider>
         </Provider>
       </QueryClientProvider>

@@ -27,6 +27,27 @@ class MemberQuery {
 
     return member;
   }
+
+  public async getChannelMembersByProfile({
+    serverId,
+    profileId,
+  }: {
+    serverId: string;
+    profileId: string;
+  }) {
+    const member = await db.member.findFirst({
+      where: {
+        serverId: serverId,
+        profileId: profileId,
+      },
+      include: {
+        profile: true,
+      },
+    });
+
+    return member;
+  }
 }
 
-export const { getChannelMembers } = MemberQuery.getInstance();
+export const { getChannelMembers, getChannelMembersByProfile } =
+  MemberQuery.getInstance();
