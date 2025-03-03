@@ -25,13 +25,9 @@ export const useSocketEvents = <T>(
     };
 
     socket.on(event, handler);
-    socket.on("connect_error", (err) => {
-      console.error("Socket connect error for event:", event, err.message);
-    });
 
     return () => {
       socket.off(event, handler);
-      socket.off("connect_error");
     };
   }, [socket, event, callback]);
 };
