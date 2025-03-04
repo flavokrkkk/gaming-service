@@ -7,7 +7,10 @@ import NextAuth, {
 } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { JWT } from "next-auth/jwt";
-import { getCurrentUser } from "@/entities/user/libs/userService";
+import {
+  getCurrentProfileBySession,
+  getCurrentUser,
+} from "@/entities/user/libs/userService";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -43,7 +46,8 @@ export const authOptions: NextAuthOptions = {
       token: JWT;
     }): Promise<Session> {
       if (session.user) {
-        session.user.id = token.id as string;
+        const profile = await getCurrentProfileBySession(session.user);
+        session.user.id = profile?.id as string;
         session.user.email = token.email as string;
         session.user.name = token.name ?? "";
         session.user.image = token.image ?? "";

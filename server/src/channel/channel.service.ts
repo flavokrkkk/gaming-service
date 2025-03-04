@@ -13,7 +13,8 @@ export class ChannelService {
   constructor(private readonly prismaService: PrismaService) {}
 
   public async getChannelById({ channelId }: { channelId: string }) {
-    const channel = await this.prismaService.channel.findUnique({
+    console.log(channelId, "chann");
+    const channel = await this.prismaService.channel.findFirst({
       where: {
         id: channelId,
       },

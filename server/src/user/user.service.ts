@@ -68,12 +68,12 @@ export class UserService {
     return newProfile;
   }
 
-  public async getCurrentProfile({ profileId }: { profileId: Profile["id"] }) {
-    if (!profileId) throw new BadRequestException("Profile id is required!");
+  public async getCurrentProfile({ email }: { email: Profile["email"] }) {
+    if (!email) throw new BadRequestException("Profile id is required!");
 
-    const profile = await this.prismaService.profile.findUnique({
+    const profile = await this.prismaService.profile.findFirst({
       where: {
-        userId: profileId,
+        email: email,
       },
     });
 

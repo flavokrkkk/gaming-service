@@ -16,10 +16,9 @@ export const useChatMessage = () => {
     // mutationFn: (request: ISendMessageRequest) => sendMessage({ ...request }),
     mutationFn: async (request: ISendMessageRequest) => {
       const session = await getSession();
-
+      console.log(session);
       if (!session || !session.user?.id) return null;
       const sessionId = session.user.id;
-
       socket?.emit("newMessage", {
         ...request,
         query: { ...request.query, sessionId },

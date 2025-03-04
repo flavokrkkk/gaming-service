@@ -1,7 +1,7 @@
 import { axiosInstance } from "@/shared/api/baseQuery";
-import { User } from "next-auth";
+import { User, getServerSession } from "next-auth";
 import { ICurrentUser } from "../types";
-import { getSessionUser } from "@/entities/session/libs/sessionService";
+import qs from "query-string";
 
 class UserService {
   private static instance: UserService;
@@ -24,13 +24,33 @@ class UserService {
   }
 
   public async getCurrentProfile() {
-    const profileId = await getSessionUser();
-    const { data } = await axiosInstance.get<ICurrentUser>(
-      `/api/v1/user/${profileId}`
-    );
+    const user = await getServerSession();
+
+    if (!user?.user.email) return null;
+
+    const url = qs.stringifyUrl({
+      url: "/api/v1/user/by-email",
+      query: { email: user.user.email },
+    });
+
+    const { data } = await axiosInstance.get<ICurrentUser>(url);
+
+    return data;
+  }
+
+  public async getCurrentProfileBySession(user?: User) {
+    if (!user?.email) return null;
+
+    const url = qs.stringifyUrl({
+      url: "/api/v1/user/by-email",
+      query: { email: user.email },
+    });
+
+    const { data } = await axiosInstance.get<ICurrentUser>(url);
 
     return data;
   }
 }
 
-export const { getCurrentUser, getCurrentProfile } = UserService.getInstance();
+export const { getCurrentUser, getCurrentProfile, getCurrentProfileBySession } =
+  UserService.getInstance();

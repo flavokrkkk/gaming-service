@@ -72,6 +72,7 @@ class ChannelService {
   }: {
     channelId: string;
   }): Promise<IChannel> {
+    console.log(channelId);
     const { data } = await axiosInstance.get<IChannel>(
       `api/v1/channel/${channelId}`
     );

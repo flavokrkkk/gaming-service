@@ -7,10 +7,12 @@ import {
   Param,
   Delete,
   Query,
+  Req,
 } from "@nestjs/common";
 import { ChannelService } from "./channel.service";
 import { CreateChannelDto } from "./dto/create-channel.dto";
 import { Channel, Profile, Server } from "@prisma/client";
+import { Request } from "express";
 
 @Controller("channel")
 export class ChannelController {
@@ -29,12 +31,12 @@ export class ChannelController {
     });
   }
 
-  @Get(":id")
-  findOne(@Param("channelId") channelId: Channel["id"]) {
+  @Get(":channelId")
+  findOne(@Param("channelId") channelId: Channel["id"], @Req() req: Request) {
     return this.channelService.getChannelById({ channelId });
   }
 
-  @Patch(":id")
+  @Patch(":channelId")
   update(
     @Body() createChannelDto: CreateChannelDto,
     @Query("serverId") serverId: Server["id"],
@@ -49,7 +51,7 @@ export class ChannelController {
     });
   }
 
-  @Delete(":id")
+  @Delete(":channelId")
   remove(
     @Query("serverId") serverId: Server["id"],
     @Query("profileId") profileId: Profile["id"],

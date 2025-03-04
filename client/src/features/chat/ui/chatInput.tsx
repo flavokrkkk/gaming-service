@@ -35,6 +35,7 @@ const ChatInput: FC<IChatInput> = ({ type, apiUrl, name, query }) => {
     type === "conversation" ? `Message ${name}` : `Message #${name}`;
 
   const onSudmit = (values: TypeChatFormSchema) => {
+    console.log(query);
     mutate({ apiUrl, query, requestBody: values });
     form.reset();
   };

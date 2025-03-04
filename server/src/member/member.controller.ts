@@ -16,7 +16,7 @@ import { Member, Profile, Server } from "@prisma/client";
 export class MemberController {
   constructor(private readonly memberService: MemberService) {}
 
-  @Patch(":id")
+  @Patch(":memberId")
   update(
     @Param("memberId") memberId: string,
     @Body() updateMemberDto: UpdateMemberDto,
@@ -31,7 +31,7 @@ export class MemberController {
     });
   }
 
-  @Delete(":id")
+  @Delete(":memberId")
   remove(
     @Param("memberId") memberId: Member["id"],
     @Query("serverId") serverId: Server["id"],

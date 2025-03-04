@@ -21,7 +21,7 @@ export class ChatGateWay implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
 
   handleConnection(client: Socket) {
-    console.log("New User connected", client.id);
+    // console.log("New User connected", client.id);
 
     this.server.emit("user-joined", {
       message: `User joined the chat: ${client.id}`,
@@ -29,7 +29,7 @@ export class ChatGateWay implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleDisconnect(client: Socket) {
-    console.log(" User disconnected", client.id);
+    // console.log(" User disconnected", client.id);
 
     this.server.emit("user-left", {
       message: `User left the chat: ${client.id}`,
@@ -49,10 +49,10 @@ export class ChatGateWay implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     const profile = await this.prismaService.profile.findUnique({
       where: {
-        userId: query.sessionId,
+        id: query.sessionId,
       },
     });
-
+    // console.log(profile);
     if (!profile) {
       throw new UnauthorizedException("Unauthorized");
     }
@@ -68,7 +68,6 @@ export class ChatGateWay implements OnGatewayConnection, OnGatewayDisconnect {
     if (!requestBody.content) {
       throw new BadRequestException("Content is missing!");
     }
-
     const server = await this.prismaService.server.findFirst({
       where: {
         id: query.serverId,
@@ -82,6 +81,24 @@ export class ChatGateWay implements OnGatewayConnection, OnGatewayDisconnect {
         members: true,
       },
     });
+
+    console.log(query);
+
+    const servern = await this.prismaService.server.findFirst({
+      where: {
+        id: "cae3688e-2cc9-4df1-8038-6bc6f849a082",
+        // members: {
+        //   some: {
+        //     profileId: profile.id,
+        //   },
+        // },
+      },
+      include: {
+        members: true,
+      },
+    });
+
+    console.log(servern, "server");
 
     if (!server) {
       throw new NotFoundException("Server not found!");
@@ -121,7 +138,6 @@ export class ChatGateWay implements OnGatewayConnection, OnGatewayDisconnect {
         },
       },
     });
-
     this.server.emit("newMessage", message);
   }
 }
