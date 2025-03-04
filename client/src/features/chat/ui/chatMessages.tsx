@@ -35,7 +35,8 @@ const ChatMessages: FC<IChatMessages> = ({
 }) => {
   const queryKey = `chat:${chatId}`;
   const addKey = `newMessage`;
-  const updateKey = `chat:${chatId}:messages:update`;
+  const deleteKey = `deleteMessage`;
+  const updateKey = `updateMessage`;
 
   const { data, fetchNextPage, hasNextPage, isFetchNextPageError, status } =
     useChatQuery({
@@ -46,7 +47,7 @@ const ChatMessages: FC<IChatMessages> = ({
       queryKey,
     });
 
-  useChatSocket({ queryKey, addKey, updateKey });
+  useChatSocket({ queryKey, addKey, updateKey, deleteKey });
 
   if (status === "pending") {
     return (

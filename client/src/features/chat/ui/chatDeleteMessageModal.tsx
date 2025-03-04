@@ -32,7 +32,6 @@ const ChatDeleteMessageModal = () => {
   const handleDeleteServer = () => {
     if (selectData?.apiUrl && selectData.query) {
       mutate({
-        apiUrl: selectData?.apiUrl,
         query: selectData?.query as Record<string, string>,
       });
     }

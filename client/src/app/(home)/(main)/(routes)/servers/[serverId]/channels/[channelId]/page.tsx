@@ -23,7 +23,6 @@ const ChannelId: FC<IChannelIdPageProps> = async ({ params }) => {
   const channel = await getChannelById({ channelId });
 
   const member = await getChannelMembers({ serverId, profileId: profile.id });
-  console.log(channel);
   if (!channel || !member) return redirect("/");
 
   return (
@@ -33,7 +32,7 @@ const ChannelId: FC<IChannelIdPageProps> = async ({ params }) => {
         member={member}
         name={channel.name}
         type="channel"
-        apiUrl="/api/messages"
+        apiUrl="/api/v1/message"
         socketUrl="/api/socket/messages"
         socketQuery={{
           channelId: channel.id,

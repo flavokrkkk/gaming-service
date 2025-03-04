@@ -1,4 +1,4 @@
-import { getOrCreateConversation } from "@/entities/conversation/api/conversationQuery";
+import { getOrCreateConversation } from "@/entities/conversation/libs/conversationService";
 import { getChannelMembersByProfile } from "@/entities/member/libs/memberService";
 import { getCurrentProfile } from "@/entities/user/libs/userService";
 import ChatHeader from "@/features/chat/ui/chatHeader";

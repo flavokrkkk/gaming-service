@@ -8,10 +8,16 @@ type ChatSocket = {
   addKey: string;
   updateKey: string;
   queryKey: string;
+  deleteKey: string;
 };
 
-export const useChatSocket = ({ addKey, updateKey, queryKey }: ChatSocket) => {
-  useSocketEvents<IMessage>(updateKey, (message) => {
+export const useChatSocket = ({
+  addKey,
+  updateKey,
+  queryKey,
+  deleteKey,
+}: ChatSocket) => {
+  const handleChangeMessage = (message: IMessage) => {
     queryClient.setQueryData(
       [queryKey],
       (oldData: { pages: Array<{ items: Array<IMessage> }> }) => {
@@ -28,6 +34,14 @@ export const useChatSocket = ({ addKey, updateKey, queryKey }: ChatSocket) => {
         return { ...oldData, pages: newData };
       }
     );
+  };
+
+  useSocketEvents<IMessage>(updateKey, (message) => {
+    handleChangeMessage(message);
+  });
+
+  useSocketEvents<IMessage>(deleteKey, (message) => {
+    handleChangeMessage(message);
   });
 
   useSocketEvents<IMessage>(addKey, (message) => {

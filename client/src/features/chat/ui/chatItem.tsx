@@ -108,7 +108,10 @@ const ChatItem: FC<IChatItem> = memo(
     const handleOpenDeleteModal = () =>
       setIsOpen({
         type: "deleteMessage",
-        data: { apiUrl: `${socketUrl}/${id}`, query: socketQuery },
+        data: {
+          apiUrl: `${socketUrl}/${id}`,
+          query: { ...socketQuery, messageId: id },
+        },
       });
 
     const onSubmit = (values: TypeChatFormSchema) => {
@@ -116,7 +119,6 @@ const ChatItem: FC<IChatItem> = memo(
         content: values.content,
         messageId: id,
         query: socketQuery,
-        queryUrl: socketUrl,
       });
       form.reset();
       setIsEditing(false);

@@ -37,7 +37,7 @@ class ServerServiceClient {
     const profileId = await getSessionUser();
 
     const url = qs.stringifyUrl({
-      url: `/api/v1/server/${serverId}/invite-code`,
+      url: `/api/v1/invite/${serverId}`,
       query: { profileId },
     });
 
@@ -164,12 +164,10 @@ class ServerServiceClient {
     profileId: string;
   }) {
     const url = qs.stringifyUrl({
-      url: `/api/v1/server/invite-code`,
-      query: { profileId, inviteCode },
+      url: `/api/v1/invite/${inviteCode}`,
+      query: { profileId },
     });
-
     const { data } = await axiosInstance.get(url);
-
     return data;
   }
 
@@ -181,7 +179,7 @@ class ServerServiceClient {
     profileId: string;
   }) {
     const url = qs.stringifyUrl({
-      url: `/api/v1/server/invite-code`,
+      url: `/api/v1/invite`,
       query: { profileId },
     });
 

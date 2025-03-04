@@ -1,7 +1,7 @@
-import axios from "axios";
 import qs from "query-string";
-import { IChatQuery, ISendMessageRequest, MessagePage } from "../types/types";
-import { TypeChatFormSchema } from "@/features/chat/schemes/chatFormShcema";
+import { IChatQuery, MessagePage } from "../types/types";
+import { getSessionUser } from "@/entities/session/libs/sessionService";
+import { axiosInstance } from "@/shared/api/baseQuery";
 
 class MessageService {
   private static instance: MessageService;
@@ -14,21 +14,6 @@ class MessageService {
     return MessageService.instance;
   }
 
-  public async sendMessage({
-    apiUrl,
-    query,
-    requestBody,
-  }: ISendMessageRequest) {
-    const url = qs.stringifyUrl({
-      url: apiUrl,
-      query: { ...query } as qs.StringifiableRecord,
-    });
-
-    const { data } = await axios.post(url, { requestBody });
-
-    return data;
-  }
-
   public async getChatMessages({
     apiUrl,
     pageParam,
@@ -37,16 +22,20 @@ class MessageService {
     channelId,
   }: Partial<IChatQuery> & {
     pageParam?: string;
+    apiUrl: string;
     paramKey: "channelId" | "conversationId";
     channelId: string;
   }): Promise<MessagePage> {
+    const profileId = await getSessionUser();
+
     const url = qs.stringifyUrl(
       {
-        url: apiUrl ?? "",
+        url: apiUrl,
         query: {
           cursor: pageParam,
           [paramKey]: paramValue,
           channelId: channelId,
+          profileId: profileId,
         },
       },
       {
@@ -54,47 +43,9 @@ class MessageService {
       }
     );
 
-    const { data } = await axios.get<MessagePage>(url);
-    return data;
-  }
-
-  public async editedMessage({
-    content,
-    queryUrl,
-    query,
-    messageId,
-  }: TypeChatFormSchema & {
-    queryUrl: string;
-    query: Record<string, string>;
-    messageId: string;
-  }) {
-    const url = qs.stringifyUrl({
-      url: `${queryUrl}/${messageId}`,
-      query: { ...query },
-    });
-
-    const { data } = await axios.patch(url, { content });
-
-    return data;
-  }
-
-  public async deletedMessage({
-    apiUrl,
-    query,
-  }: {
-    apiUrl: string;
-    query: Record<string, string>;
-  }) {
-    const url = qs.stringifyUrl({
-      url: apiUrl,
-      query: { ...query },
-    });
-
-    const { data } = await axios.delete(url);
-
+    const { data } = await axiosInstance.get<MessagePage>(url);
     return data;
   }
 }
 
-export const { sendMessage, getChatMessages, editedMessage, deletedMessage } =
-  MessageService.getInstance();
+export const { getChatMessages } = MessageService.getInstance();
