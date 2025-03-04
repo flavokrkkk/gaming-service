@@ -1,5 +1,5 @@
 import { getServerByInviteCode, setInviteMember } from "@/entities";
-import { getCurrentProfile } from "@/entities/user/api/userQuery";
+import { getCurrentProfile } from "@/entities/user/libs/userService";
 import { ERouteNames } from "@/shared/libs/utils/pathVariables";
 import { redirect } from "next/navigation";
 import { FC } from "react";

@@ -1,5 +1,5 @@
 import { getServerByIdToChannels } from "@/entities";
-import { getCurrentProfile } from "@/entities/user/api/userQuery";
+import { getCurrentProfile } from "@/entities/user/libs/userService";
 import { redirect } from "next/navigation";
 
 interface IServerIdPage {

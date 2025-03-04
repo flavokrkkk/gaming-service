@@ -1,34 +1,61 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { MemberService } from './member.service';
-import { CreateMemberDto } from './dto/create-member.dto';
-import { UpdateMemberDto } from './dto/update-member.dto';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from "@nestjs/common";
+import { MemberService } from "./member.service";
+import { UpdateMemberDto } from "./dto/update-member.dto";
+import { Member, Profile, Server } from "@prisma/client";
 
-@Controller('member')
+@Controller("member")
 export class MemberController {
   constructor(private readonly memberService: MemberService) {}
 
-  @Post()
-  create(@Body() createMemberDto: CreateMemberDto) {
-    return this.memberService.create(createMemberDto);
+  @Patch(":id")
+  update(
+    @Param("memberId") memberId: string,
+    @Body() updateMemberDto: UpdateMemberDto,
+    @Query("serverId") serverId: Server["id"],
+    @Query("profileId") profileId: Profile["id"]
+  ) {
+    return this.memberService.updateMember({
+      ...updateMemberDto,
+      memberId,
+      serverId,
+      profileId,
+    });
   }
 
-  @Get()
-  findAll() {
-    return this.memberService.findAll();
+  @Delete(":id")
+  remove(
+    @Param("memberId") memberId: Member["id"],
+    @Query("serverId") serverId: Server["id"],
+    @Query("profileId") profileId: Profile["id"]
+  ) {
+    return this.memberService.deleteMember({ memberId, serverId, profileId });
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.memberService.findOne(+id);
+  @Get("current-member")
+  currentMember(
+    @Query("serverId") serverId: Server["id"],
+    @Query("profileId") profileId: Profile["id"]
+  ) {
+    return this.memberService.getChannelMember({ serverId, profileId });
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMemberDto: UpdateMemberDto) {
-    return this.memberService.update(+id, updateMemberDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.memberService.remove(+id);
+  @Get("member-with-profile")
+  memberWithProfile(
+    @Query("serverId") serverId: Server["id"],
+    @Query("profileId") profileId: Profile["id"]
+  ) {
+    return this.memberService.getChannelMembersByProfile({
+      serverId,
+      profileId,
+    });
   }
 }

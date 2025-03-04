@@ -1,6 +1,6 @@
 import { getOrCreateConversation } from "@/entities/conversation/api/conversationQuery";
-import { getChannelMembersByProfile } from "@/entities/member/api/memberQuery";
-import { getCurrentProfile } from "@/entities/user/api/userQuery";
+import { getChannelMembersByProfile } from "@/entities/member/libs/memberService";
+import { getCurrentProfile } from "@/entities/user/libs/userService";
 import ChatHeader from "@/features/chat/ui/chatHeader";
 import { redirect } from "next/navigation";
 import React, { FC } from "react";

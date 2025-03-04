@@ -1,4 +1,7 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateMemberDto } from './create-member.dto';
+import { MemberRole } from "@prisma/client";
+import { IsString } from "class-validator";
 
-export class UpdateMemberDto extends PartialType(CreateMemberDto) {}
+export class UpdateMemberDto {
+  @IsString()
+  role: MemberRole;
+}

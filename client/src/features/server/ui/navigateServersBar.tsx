@@ -1,4 +1,3 @@
-import { getCurrentProfile } from "@/entities/user/api/userQuery";
 import NavigateServerAction from "./navigateServerAction";
 import { Separator } from "@/shared/ui/separator";
 import { ScrollArea } from "@/shared/ui/scrollArea";
@@ -9,6 +8,7 @@ import { Suspense } from "react";
 import { Skeleton } from "@/shared/ui/skeleton/skeleton";
 import UserAvatar from "@/features/user/ui/userAvatar";
 import { getAllServers } from "@/entities";
+import { getCurrentProfile } from "@/entities/user/libs/userService";
 
 const NavigateServerBar = async () => {
   const profile = await getCurrentProfile();

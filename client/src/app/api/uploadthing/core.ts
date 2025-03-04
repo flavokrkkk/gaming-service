@@ -1,4 +1,4 @@
-import { getCurrentProfile } from "@/entities/user/api/userQuery";
+import { getCurrentProfile } from "@/entities/user/libs/userService";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 
 const f = createUploadthing();

@@ -1,26 +1,166 @@
-import { Injectable } from '@nestjs/common';
-import { CreateChannelDto } from './dto/create-channel.dto';
-import { UpdateChannelDto } from './dto/update-channel.dto';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from "@nestjs/common";
+import { CreateChannelDto } from "./dto/create-channel.dto";
+import { PrismaService } from "@/prisma/prisma.service";
+import { Channel, MemberRole } from "@prisma/client";
 
 @Injectable()
 export class ChannelService {
-  create(createChannelDto: CreateChannelDto) {
-    return 'This action adds a new channel';
+  constructor(private readonly prismaService: PrismaService) {}
+
+  public async getChannelById({ channelId }: { channelId: string }) {
+    const channel = await this.prismaService.channel.findUnique({
+      where: {
+        id: channelId,
+      },
+    });
+
+    if (!channel) throw new NotFoundException("Channel not found!");
+
+    return channel;
   }
 
-  findAll() {
-    return `This action returns all channel`;
+  public async createChannel({
+    isPrivate,
+    type,
+    name,
+    serverId,
+    profileId,
+  }: CreateChannelDto & { serverId: string; profileId: string }) {
+    if (!serverId) throw new BadRequestException("Server ID is required!");
+
+    if (name === "general") {
+      throw new BadRequestException("Server name cannot be 'general'");
+    }
+
+    const server = await this.prismaService.server.update({
+      where: {
+        id: serverId,
+        members: {
+          some: {
+            profileId,
+            role: {
+              in: [MemberRole.ADMIN, MemberRole.MODERATOR],
+            },
+          },
+        },
+      },
+      data: {
+        channels: {
+          create: {
+            profileId,
+            name,
+            type,
+            isPrivate,
+          },
+        },
+      },
+    });
+
+    if (!server) throw new InternalServerErrorException("Internal Error");
+
+    return server;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} channel`;
+  public async updateChannel({
+    isPrivate,
+    type,
+    name,
+    serverId,
+    channelId,
+    profileId,
+  }: CreateChannelDto & {
+    serverId: string;
+    profileId: string;
+    channelId: Channel["id"];
+  }) {
+    if (!serverId) throw new BadRequestException("Server ID is required!");
+
+    if (!channelId) throw new BadRequestException("Channel ID is required!");
+
+    if (name === "general") {
+      throw new BadRequestException("Server name cannot be 'general'");
+    }
+
+    const server = await this.prismaService.server.update({
+      where: {
+        id: serverId,
+        members: {
+          some: {
+            profileId,
+            role: {
+              in: [MemberRole.ADMIN, MemberRole.MODERATOR],
+            },
+          },
+        },
+      },
+      data: {
+        channels: {
+          update: {
+            where: {
+              id: channelId,
+              NOT: {
+                name: "general",
+              },
+            },
+            data: {
+              name,
+              type,
+              isPrivate,
+            },
+          },
+        },
+      },
+    });
+
+    if (!server) throw new InternalServerErrorException("Internal Error");
+
+    return server;
   }
 
-  update(id: number, updateChannelDto: UpdateChannelDto) {
-    return `This action updates a #${id} channel`;
-  }
+  public async deleteChannel({
+    channelId,
+    profileId,
+    serverId,
+  }: {
+    serverId: string;
+    profileId: string;
+    channelId: Channel["id"];
+  }) {
+    if (!serverId) throw new BadRequestException("Server ID is required!");
 
-  remove(id: number) {
-    return `This action removes a #${id} channel`;
+    if (!channelId) throw new BadRequestException("Channel ID is required!");
+
+    const server = await this.prismaService.server.update({
+      where: {
+        id: serverId,
+        members: {
+          some: {
+            profileId,
+            role: {
+              in: [MemberRole.ADMIN, MemberRole.MODERATOR],
+            },
+          },
+        },
+      },
+      data: {
+        channels: {
+          delete: {
+            id: channelId,
+            name: {
+              not: "general",
+            },
+          },
+        },
+      },
+    });
+
+    if (!server) throw new InternalServerErrorException("Internal Error");
+
+    return server;
   }
 }

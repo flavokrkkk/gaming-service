@@ -1,5 +1,5 @@
 import { getServerById } from "@/entities";
-import { getCurrentProfile } from "@/entities/user/api/userQuery";
+import { getCurrentProfile } from "@/entities/user/libs/userService";
 import ServerSideBar from "@/features/server/ui/serverSideBar";
 import { redirect } from "next/navigation";
 import React, { FC, PropsWithChildren } from "react";

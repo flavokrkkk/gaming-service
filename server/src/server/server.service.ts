@@ -3,7 +3,6 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from "@nestjs/common";
 import { MemberRole, Profile, Server } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";

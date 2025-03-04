@@ -1,4 +1,4 @@
-import { getCurrentProfile } from "@/entities/user/api/userQuery";
+import { getCurrentProfile } from "@/entities/user/libs/userService";
 import { fetchFileType } from "@/features/files/libs/getFileType";
 import { db } from "@/shared/db";
 import { Message } from "@prisma/client";

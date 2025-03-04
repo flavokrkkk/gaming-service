@@ -1,4 +1,3 @@
-import { getCurrentProfile } from "@/entities/user/api/userQuery";
 import { redirect } from "next/navigation";
 import { FC } from "react";
 import ServerHeader from "./serverHeader";
@@ -11,6 +10,7 @@ import VideoChannelList from "@/features/channel/ui/videoChannelList";
 import VoiceChannelList from "@/features/channel/ui/voiceChannelList";
 import MembersList from "@/features/members/ui/membersList";
 import { getServerChannel } from "@/entities";
+import { getCurrentProfile } from "@/entities/user/libs/userService";
 
 interface IServerSideBar {
   serverId: string;

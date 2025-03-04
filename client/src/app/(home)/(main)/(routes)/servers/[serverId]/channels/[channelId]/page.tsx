@@ -1,6 +1,6 @@
-import { getChannelById } from "@/entities/channel/api/channelQuery";
-import { getChannelMembers } from "@/entities/member/api/memberQuery";
-import { getCurrentProfile } from "@/entities/user/api/userQuery";
+import { getChannelById } from "@/entities/channel/libs/channelService";
+import { getChannelMembers } from "@/entities/member/libs/memberService";
+import { getCurrentProfile } from "@/entities/user/libs/userService";
 import ChatHeader from "@/features/chat/ui/chatHeader";
 import ChatInput from "@/features/chat/ui/chatInput";
 import ChatMessages from "@/features/chat/ui/chatMessages";

@@ -7,7 +7,7 @@ import NextAuth, {
 } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { JWT } from "next-auth/jwt";
-import { getCurrentUserAuth } from "@/entities/user/api/userQuery";
+import { getCurrentUser } from "@/entities/user/libs/userService";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -57,7 +57,7 @@ export const authOptions: NextAuthOptions = {
       profile?: Profile;
     }): Promise<boolean> {
       if (!request.account || !request.user) return false;
-      const profile = await getCurrentUserAuth(request.user);
+      const profile = await getCurrentUser(request.user);
       return !!profile;
     },
 
