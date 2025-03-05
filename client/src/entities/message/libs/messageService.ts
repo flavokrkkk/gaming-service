@@ -15,14 +15,12 @@ class MessageService {
   }
 
   public async getChatMessages({
-    apiUrl,
     pageParam,
     paramValue,
     paramKey,
     channelId,
   }: Partial<IChatQuery> & {
     pageParam?: string;
-    apiUrl: string;
     paramKey: "channelId" | "conversationId";
     channelId: string;
   }): Promise<MessagePage> {
@@ -30,7 +28,7 @@ class MessageService {
 
     const url = qs.stringifyUrl(
       {
-        url: apiUrl,
+        url: "/api/v1/message",
         query: {
           cursor: pageParam,
           [paramKey]: paramValue,

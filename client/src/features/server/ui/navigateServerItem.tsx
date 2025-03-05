@@ -30,7 +30,8 @@ const NavigateServerItem: FC<INavigateServerItem> = ({
   return (
     <TooltipAction side="right" align="center" label={name}>
       <button
-        className="group relative flex items-center"
+        disabled={params?.serverId === id}
+        className="group relative flex items-center disabled:cursor-pointer"
         onClick={handleNavigate}
       >
         <div

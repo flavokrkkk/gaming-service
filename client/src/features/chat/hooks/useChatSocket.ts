@@ -3,23 +3,16 @@
 import { IMessage } from "@/entities/message/types/types";
 import { queryClient } from "@/shared/api/queryClient";
 import { useSocketEvents } from "@/shared/hooks/useSocketEvents";
+import { ESocketEvents } from "@/shared/libs/utils/socketEvents";
 
 type ChatSocket = {
-  addKey: string;
-  updateKey: string;
-  queryKey: string;
-  deleteKey: string;
+  chatId: string;
 };
 
-export const useChatSocket = ({
-  addKey,
-  updateKey,
-  queryKey,
-  deleteKey,
-}: ChatSocket) => {
+export const useChatSocket = ({ chatId }: ChatSocket) => {
   const handleChangeMessage = (message: IMessage) => {
     queryClient.setQueryData(
-      [queryKey],
+      [`chat:${chatId}`],
       (oldData: { pages: Array<{ items: Array<IMessage> }> }) => {
         if (!oldData || !oldData.pages || oldData.pages.length === 0) {
           return oldData;
@@ -36,17 +29,9 @@ export const useChatSocket = ({
     );
   };
 
-  useSocketEvents<IMessage>(updateKey, (message) => {
-    handleChangeMessage(message);
-  });
-
-  useSocketEvents<IMessage>(deleteKey, (message) => {
-    handleChangeMessage(message);
-  });
-
-  useSocketEvents<IMessage>(addKey, (message) => {
+  const handleSetMessages = (message: IMessage) => {
     queryClient.setQueryData(
-      [queryKey],
+      [`chat:${chatId}`],
       (oldData: { pages: Array<{ items: Array<IMessage> }> }) => {
         if (!oldData || !oldData.pages || oldData.pages.length === 0) {
           return { pages: [{ items: [message], nextCursor: null }] };
@@ -62,5 +47,17 @@ export const useChatSocket = ({
         };
       }
     );
+  };
+
+  useSocketEvents<IMessage>(ESocketEvents.UPDATE_MESSAGE, (message) => {
+    handleChangeMessage(message);
+  });
+
+  useSocketEvents<IMessage>(ESocketEvents.DELETE_MESSAGE, (message) => {
+    handleChangeMessage(message);
+  });
+
+  useSocketEvents<IMessage>(ESocketEvents.NEW_MESSAGE, (message) => {
+    handleSetMessages(message);
   });
 };

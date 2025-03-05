@@ -1,7 +1,7 @@
-import { CommandItem } from "@/shared/ui/command/command";
 import React, { FC } from "react";
 import { IChannelSearch } from "../types/types";
 import { cn } from "@/shared";
+import { CommandItem } from "@/shared/ui/command/command";
 
 interface IServerSearchGroupCard {
   id: string;

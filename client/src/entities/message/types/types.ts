@@ -4,14 +4,11 @@ import { TypeChatFormSchema } from "@/features/chat/schemes/chatFormShcema";
 import { TypeFileFormSchema } from "@/features/chat/schemes/fileFormSchema";
 
 export interface ISendMessageRequest {
-  apiUrl: string;
   query: Record<string, unknown>;
   requestBody: TypeChatFormSchema & Partial<TypeFileFormSchema>;
 }
 
 export interface IChatQuery {
-  queryKey: string;
-  apiUrl: string;
   channelId: string;
   paramKey: "channelId" | "conversationId";
   paramValue: string;

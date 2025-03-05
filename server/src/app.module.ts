@@ -9,6 +9,9 @@ import { MemberModule } from "./member/member.module";
 import { UserModule } from "./user/user.module";
 import { ConfigModule } from "@nestjs/config";
 import { IS_DEVELOP_ENV } from "./libs/common/utils/develop.utils";
+import { InviteModule } from "./invite/invite.module";
+import { ConversationModule } from "./conversation/conversation.module";
+import { MessageModule } from "./message/message.module";
 
 @Module({
   imports: [
@@ -20,8 +23,11 @@ import { IS_DEVELOP_ENV } from "./libs/common/utils/develop.utils";
     ChatModule,
     ServerModule,
     ChannelModule,
+    InviteModule,
     MemberModule,
     UserModule,
+    ConversationModule,
+    MessageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

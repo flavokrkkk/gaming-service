@@ -24,7 +24,7 @@ const ChatMessageFileModal = () => {
 
   const { setClose } = useActions();
 
-  const { mutate } = useChatMessage();
+  const { handleSendMessage } = useChatMessage();
 
   const form = useForm<TypeFileFormSchema>({
     resolver: zodResolver(FileFormSchema),
@@ -45,8 +45,7 @@ const ChatMessageFileModal = () => {
 
   const handleMutation = (values: TypeFileFormSchema) => {
     if (selectServers?.apiUrl && selectServers.query) {
-      mutate({
-        apiUrl: selectServers?.apiUrl,
+      handleSendMessage({
         query: selectServers?.query,
         requestBody: { ...values, content: values.fileUrl },
       });

@@ -1,5 +1,6 @@
 import { getServerByIdToChannels } from "@/entities";
 import { getCurrentProfile } from "@/entities/user/libs/userService";
+import ClientServerPage from "@/features/server/ui/serverSuspense";
 import { redirect } from "next/navigation";
 
 interface IServerIdPage {
@@ -19,11 +20,13 @@ export default async function ServerIdPage({ params }: IServerIdPage) {
     profileId: profile.id,
   });
 
+  if (!server) return redirect("/");
+
   const initialChannel = server?.channels?.[0];
 
   if (initialChannel?.name !== "general") {
     return null;
   }
 
-  return redirect(`/servers/${serverId}/channels/${initialChannel.id}`);
+  return <ClientServerPage server={server} serverId={serverId} />;
 }

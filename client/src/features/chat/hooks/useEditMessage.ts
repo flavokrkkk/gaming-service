@@ -1,36 +1,37 @@
-import { useMutation } from "@tanstack/react-query";
 import { TypeChatFormSchema } from "../schemes/chatFormShcema";
 import { getSessionUser } from "@/entities/session/libs/sessionService";
 import { useAppSelector } from "@/shared/hooks/useAppSelector";
 import { socketSelectors } from "@/entities/socket/model/store/socketSlice";
+import { useTransition } from "react";
+import { ESocketEvents } from "@/shared/libs/utils/socketEvents";
 
 export const useEditMessage = () => {
   const socket = useAppSelector(socketSelectors.socket);
+  const [isPending, startTransition] = useTransition();
 
-  const { mutate, isPending } = useMutation({
-    mutationKey: ["edit message"],
-    mutationFn: async ({
-      content,
-      query: { channelId, serverId },
-      messageId,
-    }: TypeChatFormSchema & {
-      query: Record<string, string>;
-      messageId: string;
-    }) => {
-      const sessionId = await getSessionUser();
-      socket?.emit("updateMessage", {
+  const handleChangeMessage = async ({
+    content,
+    query: { channelId, serverId },
+    messageId,
+  }: TypeChatFormSchema & {
+    query: Record<string, string>;
+    messageId: string;
+  }) => {
+    const sessionId = await getSessionUser();
+
+    startTransition(() => {
+      socket?.emit(ESocketEvents.UPDATE_MESSAGE, {
         messageId,
         content,
         sessionId,
         channelId,
         serverId,
       });
-      return new Promise((resolve) => resolve("hello"));
-    },
-  });
+    });
+  };
 
   return {
     isPending,
-    mutate,
+    handleChangeMessage,
   };
 };

@@ -3,10 +3,10 @@
 import { FC, useState } from "react";
 import { UploadDropzone } from "@/shared/libs/utils/uploadthing";
 import Image from "next/image";
-import { FileText, X } from "lucide-react";
+import { X } from "lucide-react";
 import { Skeleton } from "@/shared/ui/skeleton/skeleton";
 import { useSkeletonImage } from "@/shared/hooks/useSkeletonImage";
-import { cn } from "@/shared";
+import FileBadge from "./fileBadge";
 
 interface IFileUpload {
   endpoint: "messageFile" | "serverImage";
@@ -45,29 +45,7 @@ const FileUpload: FC<IFileUpload> = ({ endpoint, value, onChange }) => {
   }
   if (value && fileType === "pdf") {
     return (
-      <div
-        className={cn(
-          "relative flex items-center gap-3 p-3 mt-2 rounded-lg bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 shadow-sm hover:bg-zinc-200/50 dark:hover:bg-zinc-800 transition-colors"
-        )}
-      >
-        <div className="flex-shrink-0">
-          <FileText className="h-8 w-8 text-indigo-500 dark:text-indigo-400" />
-        </div>
-
-        <div className="flex-1 min-w-0">
-          <a
-            href={value}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="line-clamp-1 flex whitespace-pre-wrap break-all text-start  text-sm md:text-xs  font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
-          >
-            {value}
-          </a>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">
-            Click to open in new tab
-          </p>
-        </div>
-
+      <FileBadge url={value}>
         <button
           onClick={resetFiles}
           className="flex-shrink-0 bg-rose-500 text-white p-1.5 rounded-full hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-400 shadow-sm transition-colors"
@@ -76,7 +54,7 @@ const FileUpload: FC<IFileUpload> = ({ endpoint, value, onChange }) => {
         >
           <X className="h-4 w-4" />
         </button>
-      </div>
+      </FileBadge>
     );
   }
 

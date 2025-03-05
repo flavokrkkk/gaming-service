@@ -146,8 +146,6 @@ export class ServerService {
       },
     });
 
-    if (!server) throw new NotFoundException("Server not found!");
-
     return server;
   }
 
@@ -311,6 +309,34 @@ export class ServerService {
         profileId: profileId,
       },
     });
+
+    return server;
+  }
+
+  public async getServerWithMembers({
+    serverId,
+    profileId,
+  }: {
+    serverId: Server["id"];
+    profileId: Profile["id"];
+  }) {
+    const server = await this.prismaService.server.findFirst({
+      where: {
+        id: serverId,
+        members: {
+          some: {
+            profileId: profileId,
+          },
+        },
+      },
+      include: {
+        members: true,
+      },
+    });
+
+    if (!server) {
+      throw new NotFoundException("Server not found!");
+    }
 
     return server;
   }

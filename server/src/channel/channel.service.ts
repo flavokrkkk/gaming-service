@@ -6,14 +6,13 @@ import {
 } from "@nestjs/common";
 import { CreateChannelDto } from "./dto/create-channel.dto";
 import { PrismaService } from "@/prisma/prisma.service";
-import { Channel, MemberRole } from "@prisma/client";
+import { Channel, MemberRole, Server } from "@prisma/client";
 
 @Injectable()
 export class ChannelService {
   constructor(private readonly prismaService: PrismaService) {}
 
   public async getChannelById({ channelId }: { channelId: string }) {
-    console.log(channelId, "chann");
     const channel = await this.prismaService.channel.findFirst({
       where: {
         id: channelId,
@@ -21,7 +20,6 @@ export class ChannelService {
     });
 
     if (!channel) throw new NotFoundException("Channel not found!");
-
     return channel;
   }
 
@@ -163,5 +161,26 @@ export class ChannelService {
     if (!server) throw new InternalServerErrorException("Internal Error");
 
     return server;
+  }
+
+  public async getChannelInServer({
+    channelId,
+    serverId,
+  }: {
+    channelId: Channel["id"];
+    serverId: Server["id"];
+  }) {
+    const channel = await this.prismaService.channel.findFirst({
+      where: {
+        id: channelId,
+        serverId: serverId,
+      },
+    });
+
+    if (!channel) {
+      throw new NotFoundException("Server not found!");
+    }
+
+    return channel;
   }
 }

@@ -3,20 +3,17 @@ import { IChatQuery, MessagePage } from "@/entities/message/types/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 export const useChatQuery = ({
-  queryKey,
-  apiUrl,
   paramKey,
   paramValue,
   channelId,
 }: IChatQuery) => {
   const { data, fetchNextPage, hasNextPage, isFetchNextPageError, status } =
     useInfiniteQuery<MessagePage, Error>({
-      queryKey: [queryKey],
+      queryKey: [`chat:${channelId}`],
       queryFn: ({ pageParam }) =>
         getChatMessages({
           pageParam: pageParam as string,
           paramKey,
-          apiUrl,
           paramValue,
           channelId,
         }),

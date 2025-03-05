@@ -29,14 +29,6 @@ export const socketSlice = createSliceWithThunks({
     connectionSocket: create.asyncThunk<Socket, void, { rejectValue: string }>(
       async (_, { rejectWithValue }) => {
         try {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          // const socket = new (io as any)(process.env.NEXT_PUBLIC_SITE_URL!, {
-          //   path: "/api/socket/io",
-          //   addTrailingSlash: false,
-          //   // autoConnect: true,
-          //   // transports: ["websocket"],
-          // });
-
           const socket = io("http://localhost:3002", {
             transports: ["websocket"],
           });

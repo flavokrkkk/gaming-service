@@ -3,7 +3,7 @@ import { getChannelMembers } from "@/entities/member/libs/memberService";
 import { getCurrentProfile } from "@/entities/user/libs/userService";
 import ChatHeader from "@/features/chat/ui/chatHeader";
 import ChatInput from "@/features/chat/ui/chatInput";
-import ChatMessages from "@/features/chat/ui/chatMessages";
+import { ChatMessages } from "@/features/chat/ui/chatMessages";
 import { redirect } from "next/navigation";
 import React, { FC } from "react";
 
@@ -21,7 +21,6 @@ const ChannelId: FC<IChannelIdPageProps> = async ({ params }) => {
   const { serverId, channelId } = await params;
 
   const channel = await getChannelById({ channelId });
-
   const member = await getChannelMembers({ serverId, profileId: profile.id });
   if (!channel || !member) return redirect("/");
 
@@ -32,8 +31,6 @@ const ChannelId: FC<IChannelIdPageProps> = async ({ params }) => {
         member={member}
         name={channel.name}
         type="channel"
-        apiUrl="/api/v1/message"
-        socketUrl="/api/socket/messages"
         socketQuery={{
           channelId: channel.id,
           serverId: channel.serverId,

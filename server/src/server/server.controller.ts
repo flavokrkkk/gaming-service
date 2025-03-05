@@ -11,7 +11,6 @@ import {
 import { ServerService } from "./server.service";
 import { CreateServerDto } from "./dto/create-server.dto";
 import { Profile, Server } from "@prisma/client";
-import { UpdateInviteLinkDto } from "./dto/update-invite-link.dto";
 
 @Controller("server")
 export class ServerController {
@@ -72,30 +71,6 @@ export class ServerController {
   getServerChannel(@Param("serverId") serverId: Server["id"]) {
     console.log(serverId);
     return this.serverService.getServerChannel({ serverId });
-  }
-
-  @Get("invite-code")
-  getServerByInviteCode(
-    @Query("inviteCode") inviteCode: string,
-    @Query("profileId") profileId: Profile["id"]
-  ) {
-    return this.serverService.getServerByInviteCode({ inviteCode, profileId });
-  }
-
-  @Post("invite-code")
-  setInviteMember(
-    @Body() { inviteCode }: UpdateInviteLinkDto,
-    @Query("profileId") profileId: Profile["id"]
-  ) {
-    return this.serverService.setInviteMember({ inviteCode, profileId });
-  }
-
-  @Patch(":serverId/invite-code")
-  updateServerInviteLink(
-    @Param("serverId") serverId: Server["id"],
-    @Query("profileId") profileId: Profile["id"]
-  ) {
-    return this.serverService.updateServerInviteLink({ serverId, profileId });
   }
 
   @Post(":serverId/leave")

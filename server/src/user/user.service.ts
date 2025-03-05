@@ -69,11 +69,30 @@ export class UserService {
   }
 
   public async getCurrentProfile({ email }: { email: Profile["email"] }) {
-    if (!email) throw new BadRequestException("Profile id is required!");
+    if (!email) throw new BadRequestException("Profile email is required!");
 
     const profile = await this.prismaService.profile.findFirst({
       where: {
         email: email,
+      },
+    });
+
+    if (!profile)
+      throw new InternalServerErrorException("Internal Server Error!");
+
+    return profile;
+  }
+
+  public async getCurrentProfileById({
+    profileId,
+  }: {
+    profileId: Profile["id"];
+  }) {
+    if (!profileId) throw new BadRequestException("Profile id is required!");
+
+    const profile = await this.prismaService.profile.findFirst({
+      where: {
+        id: profileId,
       },
     });
 

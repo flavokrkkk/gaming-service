@@ -21,7 +21,7 @@ const ChatDeleteMessageModal = () => {
   const type = useAppSelector(serverSelectors.type);
   const selectData = useAppSelector(serverSelectors.selectServers);
 
-  const { mutate, isPending } = useDeleteMessage();
+  const { handleDeleteMessage, isPending } = useDeleteMessage();
 
   const { setClose } = useActions();
 
@@ -30,8 +30,8 @@ const ChatDeleteMessageModal = () => {
   const handleClose = () => setClose();
 
   const handleDeleteServer = () => {
-    if (selectData?.apiUrl && selectData.query) {
-      mutate({
+    if (selectData?.query) {
+      handleDeleteMessage({
         query: selectData?.query as Record<string, string>,
       });
     }

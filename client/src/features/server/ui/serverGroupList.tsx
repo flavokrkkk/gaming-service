@@ -1,8 +1,8 @@
-import { CommandGroup } from "@/shared/ui/command/command";
 import React, { FC } from "react";
 import { IChannelSearch } from "../types/types";
 import ServerSearchGroupCard from "./serverSearchGroupCard";
 import { cn } from "@/shared";
+import { CommandGroup } from "@/shared/ui/command/command";
 
 interface IServerGroupList {
   label: IChannelSearch["label"];

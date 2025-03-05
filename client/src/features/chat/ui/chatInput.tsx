@@ -27,16 +27,15 @@ const ChatInput: FC<IChatInput> = ({ type, apiUrl, name, query }) => {
     },
   });
 
-  const { isPending, mutate } = useChatMessage();
-
-  const isLoading = form.formState.isSubmitting;
+  const { handleSendMessage } = useChatMessage();
 
   const placeholderText =
     type === "conversation" ? `Message ${name}` : `Message #${name}`;
 
   const onSudmit = (values: TypeChatFormSchema) => {
-    mutate({ apiUrl, query, requestBody: values });
+    handleSendMessage({ query, requestBody: values });
     form.reset();
+    form.setFocus("content");
   };
 
   const handleFilePinModal = () =>
@@ -61,8 +60,8 @@ const ChatInput: FC<IChatInput> = ({ type, apiUrl, name, query }) => {
                   </button>
                   <Input
                     {...field}
+                    autoFocus
                     placeholder={placeholderText}
-                    disabled={isLoading || isPending}
                     className="px-14  py-6 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-300 placeholder:text-zinc-500 dark:placeholder:text-zinc-500 placeholder:font-semibold placeholder:text-base !text-base"
                   />
                   <div className="absolute top-7 right-8">
