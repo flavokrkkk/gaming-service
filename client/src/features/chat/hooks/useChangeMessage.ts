@@ -32,12 +32,15 @@ export const useChangeMessage = ({
   const isLoading = form.formState.isLoading;
 
   const onSubmit = (values: TypeChatFormSchema) => {
-    handleChangeMessage({
-      content: values.content,
-      messageId,
-      query: socketQuery,
-    });
-    form.reset();
+    if (values.content !== content) {
+      handleChangeMessage({
+        content: values.content,
+        messageId,
+        query: socketQuery,
+      });
+      form.reset();
+    }
+
     setIsEditing(false);
   };
 

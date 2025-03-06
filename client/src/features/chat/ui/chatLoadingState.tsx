@@ -1,3 +1,5 @@
+"use client";
+
 import { Skeleton } from "@/shared/ui/skeleton/skeleton";
 import React, { FC } from "react";
 
@@ -8,8 +10,9 @@ interface IChatLoadingState {
 
 const ChatLoadingState: FC<IChatLoadingState> = ({
   isFullChat,
-  messageCount = 10,
+  messageCount = 12,
 }) => {
+  console.log(typeof window !== "undefined" && window.outerHeight);
   return (
     <div className="flex flex-col flex-1 h-full overflow-hidden">
       {isFullChat && (
